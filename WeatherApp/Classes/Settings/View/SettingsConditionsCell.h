@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, ConditionType) {
 
 @property (nonatomic, strong) NSString *titleString;
 @property (nonatomic) ConditionType conditionType;
-@property (nonatomic, copy) void (^valueChanged)();
+@property (nonatomic, copy) void (^updateConditionsOnMainScreen)();
 
 
 @end

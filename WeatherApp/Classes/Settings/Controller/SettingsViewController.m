@@ -107,9 +107,10 @@
     {
         SettingsConditionsCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SettingsConditionsCellIdentifier"];
         
-        cell.valueChanged = ^()
+        cell.updateConditionsOnMainScreen = ^()
         {
-            [weakSelf callShouldRefreshWeatherBlock];
+            if (weakSelf.shouldUpdateConditionViews)
+                weakSelf.shouldUpdateConditionViews();
         };
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         switch (indexPath.row) {
@@ -156,7 +157,22 @@
     if ([objectsToDelete count] > 0)
         [_mainManagedObjectContext deleteObject:[objectsToDelete firstObject]];
     
+    [self checkIfSelectedCityIsDeleted];
+    
     [self loadData];
+    
+    if ([array count] != 0)
+    if (_shouldRefreshWeather)
+        _shouldRefreshWeather();
+    
+}
+
+- (void)checkIfSelectedCityIsDeleted
+{
+    CityEntity *city = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
+    
+    if (!city)//if we deleted last selected city select another one
+        [((CityEntity *)[[[CoreDataManager sharedManager] citiesForSearchQuery:@""] firstObject]) setValue:@YES forKey:@"isSelected"];
     
 }
 
@@ -167,8 +183,22 @@
         CityEntity *selectedEntity = [array objectAtIndex:indexPath.row];
         [selectedEntity setValue:@YES forKey:@"isSelected"];
         
+        [self callShouldRefreshWeatherBlock];
+        
     }
-    [self callShouldRefreshWeatherBlock];
+    else
+    {
+        CityEntity *selectedCity = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
+        [tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:[array indexOfObject:selectedCity] inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
+}
+
+- (nullable NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section != 0)
+        return nil;
+    else
+        return indexPath;
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath

@@ -53,14 +53,19 @@
     __weak IBOutlet NSLayoutConstraint *_searchbarCancelButtonConstraint;
     __weak IBOutlet NSLayoutConstraint *_cancelButtonContainerViewLeadingConstraint;
     
-    __weak IBOutlet UIButton *_backgroundButton;
     __weak IBOutlet UITableView *_searchResultsTableView;
     
     NSArray *_cityArray;
     
+    __weak IBOutlet NSLayoutConstraint *_humidityTrailingConstraint;
+    __weak IBOutlet NSLayoutConstraint *_windSpeedTrailingConstraint;
+    __weak IBOutlet NSLayoutConstraint *_windSpeedLeadingConstraint;
+    __weak IBOutlet NSLayoutConstraint *_pressureLeadingConstraint;
     BOOL _searchModeAnimationStared;
     
     ForecastDataSource *_forecastDS;
+    
+    CGFloat mainScreenWidth;
 }
 
 @end
@@ -82,6 +87,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    mainScreenWidth = [UIScreen mainScreen].bounds.size.width;
     
     [self addObservers];
     
@@ -134,7 +141,9 @@
 {
     _searchContainerViewHeightConstraint.constant = 0;
     
-    _backgroundButton.hidden = _searchResultsTableView.hidden = YES;
+    _searchResultsTableView.hidden = YES;
+    
+    [self updateConditionViews];
     
     _cancelButtonContainerViewLeadingConstraint.constant = - _cancelButtonContainerView.frame.size.width;
 }
@@ -376,7 +385,7 @@
             _searchContainerViewHeightConstraint.constant = 0;
         }
         
-        _backgroundButton.hidden = _searchResultsTableView.hidden = !enabled;
+        _searchResultsTableView.hidden = !enabled;
         
         [weakSelf.view setNeedsLayout];
         [weakSelf.view  layoutIfNeeded];
@@ -425,9 +434,16 @@
     
     settingsVC.shouldRefreshWeather = ^(){
         
-        _currentCity = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
+        if ([[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject])
+            _currentCity = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
         
         [weakSelf loadWeather];
+    };
+    
+    settingsVC.shouldUpdateConditionViews = ^(){
+      
+        [weakSelf updateConditionViews];
+        
     };
     
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:settingsVC] animated:YES completion:nil];
@@ -490,6 +506,9 @@
     item.name = selectedCity.name;
     item.countryCode = selectedCity.countryCode;
     item.geonameId = [selectedCity.geonameId floatValue];
+    item.latitude = selectedCity.latitude;
+    item.longitude = selectedCity.longitude;
+    item.isSelected = YES;
     
     [[[CoreDataManager sharedManager] mainManagedObjectContext] save:nil];
     
@@ -497,6 +516,67 @@
 
 #pragma mark - Helpers
 
+- (void)updateConditionViews
+{
+    _humidityContainerView.hidden = ![ConfigManager isHumidityShown];
+    _presureContainerView.hidden = ![ConfigManager isPressureShown];
+    _windContainerView.hidden = ![ConfigManager isWindSpeedShown];
+    
+    [self setupHumiditySize];
+    [self setupPressureSize];
+    [self setupWindSpeedSize];
+    
+}
+
+- (void)setupHumiditySize
+{
+    if ((![ConfigManager isPressureShown] && [ConfigManager isWindSpeedShown]) || ([ConfigManager isPressureShown] && ![ConfigManager isWindSpeedShown]))
+        _humidityTrailingConstraint.constant = mainScreenWidth/2;
+    if ([ConfigManager isPressureShown] && [ConfigManager isWindSpeedShown])
+         _humidityTrailingConstraint.constant = mainScreenWidth*2/3;
+    if (![ConfigManager isPressureShown] && ![ConfigManager isWindSpeedShown])
+        _humidityTrailingConstraint.constant = 0;
+}
+
+- (void)setupWindSpeedSize
+{
+    if (![ConfigManager isPressureShown] && [ConfigManager isHumidityShown])
+    {
+        _windSpeedLeadingConstraint.constant = mainScreenWidth/2;
+        _windSpeedTrailingConstraint.constant = 0;
+    }
+    else if ([ConfigManager isPressureShown] && ![ConfigManager isHumidityShown])
+    {
+        _windSpeedLeadingConstraint.constant = 0;
+        _windSpeedTrailingConstraint.constant = mainScreenWidth/2;
+    }
+    else if ([ConfigManager isPressureShown] && [ConfigManager isHumidityShown])
+    {
+        _windSpeedLeadingConstraint.constant = mainScreenWidth/3;
+        _windSpeedTrailingConstraint.constant = mainScreenWidth/3;
+    }
+    else if (![ConfigManager isPressureShown] && ![ConfigManager isHumidityShown])
+    {
+        _windSpeedLeadingConstraint.constant = 0;
+        _windSpeedTrailingConstraint.constant = 0;
+    }
+}
+
+- (void)setupPressureSize
+{
+    if ((![ConfigManager isHumidityShown] && [ConfigManager isWindSpeedShown]) || ([ConfigManager isHumidityShown] && ![ConfigManager isWindSpeedShown]))
+    {
+        _pressureLeadingConstraint.constant = mainScreenWidth/2;
+    }
+    else if ([ConfigManager isHumidityShown] && [ConfigManager isWindSpeedShown])
+    {
+        _pressureLeadingConstraint.constant = mainScreenWidth*2/3;
+    }
+    else if (![ConfigManager isHumidityShown] && ![ConfigManager isWindSpeedShown])
+    {
+        _pressureLeadingConstraint.constant = 0;
+    }
+}
 - (void)resetSearchTextField:(BOOL)shouldReset andHideKeyBoard:(BOOL)shouldHideKeyboard andDisableSearch:(BOOL)disableSearch
 {
     if (shouldReset)

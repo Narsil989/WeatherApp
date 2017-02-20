@@ -21,6 +21,10 @@
 
 - (void)saveChangesOnConfigurationDict;
 
+- (BOOL)isHumidityShown;
+- (BOOL)isPressureShown;
+- (BOOL)isWindSpeedShown;
+
 + (instancetype)sharedInstance;
 
 @end

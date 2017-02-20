@@ -9,7 +9,7 @@
 		<key>ShowPressure</key>
 		<true/>
 		<key>ShowWindSpeed</key>
-		<false/>
+		<true/>
 	</dict>
 	<key>UseUSUnits</key>
 	<false/>

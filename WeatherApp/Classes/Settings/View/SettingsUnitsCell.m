@@ -59,8 +59,10 @@
 
 - (IBAction)metricButtonTapped:(id)sender
 {
+    if (_metricButton.selected) return;
+    
     _metricButton.selected = !_metricButton.selected;
-    if (_metricButton.selected && _imperialButton.selected) _imperialButton.selected = !_imperialButton.selected;
+    _imperialButton.selected = !_imperialButton.selected;
     
     [self updateSettingsDict];
     [self updateButtons];
@@ -68,8 +70,10 @@
 
 - (IBAction)imperialButtonTapped:(id)sender
 {
+    if (_imperialButton.selected) return;
+    
     _imperialButton.selected = !_imperialButton.selected;
-    if (_metricButton.selected && _imperialButton.selected) _metricButton.selected = !_metricButton.selected;
+    _metricButton.selected = !_metricButton.selected;
     
     [self updateSettingsDict];
     [self updateButtons];

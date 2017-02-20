@@ -30,6 +30,7 @@
 {
     [super viewDidLoad];
     
+    _mainManagedObjectContext = [[CoreDataManager sharedManager] mainManagedObjectContext];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAlertViewController:) name:@"UserLocationUpdated" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startingData) name:@"UserDeclinedLocation" object:nil];
    // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAlertViewController:) name:@"UserAcceptedLocation" object:nil];
@@ -39,7 +40,6 @@
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"AppWasAlreadyUsed"])
         [self createFirstTimeRunData];
     
-    _mainManagedObjectContext = [[CoreDataManager sharedManager] mainManagedObjectContext];
     if (!_forecastDS) _forecastDS = [ForecastDataSource new];
     [_forecastDS setMaxRows:@"10"];
     [_forecastDS setUsername:@"narsil"];

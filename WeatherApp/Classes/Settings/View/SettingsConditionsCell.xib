@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,43 +18,39 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="37"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5lm-cb-c55">
-                        <rect key="frame" x="15" y="-1" width="38" height="39"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="38" id="cyd-8E-gd3"/>
-                        </constraints>
-                        <state key="normal" image="CheckMarkUnchecked.png"/>
-                        <state key="selected" image="CheckMark.png"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PlS-Jt-40Y">
+                        <rect key="frame" x="0.0" y="-1" width="320" height="39"/>
+                        <inset key="titleEdgeInsets" minX="55" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <state key="normal" title="Button"/>
                         <connections>
-                            <action selector="checkmarkButtonTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="JeE-Xb-rZV"/>
+                            <action selector="checkmarkButtonTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="4iI-ie-CRR"/>
                         </connections>
                     </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o2w-HU-PHS">
-                        <rect key="frame" x="53" y="0.0" width="267" height="38"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CheckMark.png" translatesAutoresizingMaskIntoConstraints="NO" id="VpS-86-56o">
+                        <rect key="frame" x="24" y="9" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="Clz-sY-30y"/>
+                            <constraint firstAttribute="height" constant="20" id="CqL-qK-pJ2"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="o2w-HU-PHS" firstAttribute="leading" secondItem="5lm-cb-c55" secondAttribute="trailing" id="F30-LH-IT8"/>
-                    <constraint firstAttribute="bottom" secondItem="o2w-HU-PHS" secondAttribute="bottom" constant="-1" id="FD8-i3-wUU"/>
-                    <constraint firstItem="5lm-cb-c55" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="-1" id="IlE-Tb-kAT"/>
-                    <constraint firstAttribute="bottom" secondItem="5lm-cb-c55" secondAttribute="bottom" id="JzY-XY-6M7"/>
-                    <constraint firstAttribute="trailing" secondItem="o2w-HU-PHS" secondAttribute="trailing" id="Mv3-EA-YXz"/>
-                    <constraint firstItem="5lm-cb-c55" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="e4o-wb-EtW"/>
-                    <constraint firstItem="o2w-HU-PHS" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="owj-6a-jbP"/>
+                    <constraint firstItem="PlS-Jt-40Y" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="-1" id="3hj-5s-3Fs"/>
+                    <constraint firstItem="VpS-86-56o" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="47x-RH-dbj"/>
+                    <constraint firstItem="PlS-Jt-40Y" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="5s1-oT-ysW"/>
+                    <constraint firstAttribute="bottom" secondItem="PlS-Jt-40Y" secondAttribute="bottom" constant="-0.5" id="WQi-Ti-ZTE"/>
+                    <constraint firstAttribute="trailing" secondItem="PlS-Jt-40Y" secondAttribute="trailing" id="WbM-AA-J0N"/>
+                    <constraint firstItem="VpS-86-56o" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="16" id="ad2-ed-jxG"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="_checkmarkButton" destination="5lm-cb-c55" id="WBJ-zc-gzb"/>
-                <outlet property="_conditionLabel" destination="o2w-HU-PHS" id="8YC-9l-nBR"/>
+                <outlet property="_checkmarkButton" destination="PlS-Jt-40Y" id="Z4I-Wi-mRj"/>
+                <outlet property="_checkmarkImageView" destination="VpS-86-56o" id="KKt-QW-NaO"/>
             </connections>
-            <point key="canvasLocation" x="-200" y="-56"/>
+            <point key="canvasLocation" x="110" y="-131"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="CheckMark.png" width="20" height="20"/>
-        <image name="CheckMarkUnchecked.png" width="20" height="20"/>
     </resources>
 </document>

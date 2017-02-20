@@ -11,6 +11,6 @@
 @interface SettingsViewController : UIViewController <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, copy) void (^shouldRefreshWeather)();
-
+@property (nonatomic, copy) void (^shouldUpdateConditionViews)();
 
 @end

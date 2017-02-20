@@ -11,7 +11,7 @@
 @implementation SettingsConditionsCell
 {
     __weak IBOutlet UIButton *_checkmarkButton;
-    __weak IBOutlet UILabel *_conditionLabel;
+    __weak IBOutlet UIImageView *_checkmarkImageView;
 }
 
 - (void)awakeFromNib
@@ -23,29 +23,32 @@
 
 - (void)applyStyle
 {
-    [WAStyle applyStyle:@"Settings_Title_Label" toLabel:_conditionLabel];
+    [WAStyle applyFontStyle:@"Settings_Title_Label_Selected" toButton:_checkmarkButton forState:UIControlStateSelected];
+    [WAStyle applyFontStyle:@"Settings_Title_Label" toButton:_checkmarkButton forState:UIControlStateNormal];
 }
 
 - (void)bindGUI
 {
     [self bindTitleLabel];
-    [self updateLabelStyle];
+    [self updateImage];
 }
 
 - (void)bindTitleLabel
 {
     if (_titleString.length)
-        _conditionLabel.text = _titleString;
+        [_checkmarkButton setTitle:_titleString forState:UIControlStateNormal];
 }
 
 - (void)bindButton
 {
     if (_conditionType == Humidity)
-        _checkmarkButton.selected = [[ConfigManager.settingsDict valueForKeyPath:condition_humidity_key_path] boolValue];
+        _checkmarkButton.selected = [ConfigManager isHumidityShown];
     else if (_conditionType == Pressure)
-        _checkmarkButton.selected = [[ConfigManager.settingsDict valueForKeyPath:condition_pressure_key_path] boolValue];
+        _checkmarkButton.selected = [ConfigManager isPressureShown];
     else if (_conditionType == WindSpeed)
-        _checkmarkButton.selected = [[ConfigManager.settingsDict valueForKeyPath:condition_wind_speed_key_path] boolValue];
+        _checkmarkButton.selected = [ConfigManager isWindSpeedShown];
+    
+    [self updateImage];
 }
 
 - (void)setConditionType:(ConditionType)conditionType
@@ -53,7 +56,7 @@
     _conditionType = conditionType;
     
     [self bindButton];
-    [self updateLabelStyle];
+    [self updateImage];
 }
 
 - (void)setTitleString:(NSString *)titleString
@@ -69,7 +72,7 @@
     
     [self updateSettingsDict];
     
-    [self updateLabelStyle];
+    [self updateImage];
 }
 
 - (void)updateSettingsDict
@@ -82,12 +85,14 @@
         [ConfigManager.settingsDict setValue:@(_checkmarkButton.selected) forKeyPath:condition_wind_speed_key_path];
 
     [ConfigManager saveChangesOnConfigurationDict];
+    
+    if (_updateConditionsOnMainScreen)
+        _updateConditionsOnMainScreen();
 }
 
-- (void)updateLabelStyle
+- (void)updateImage
 {
-    [WAStyle applyStyle:_checkmarkButton.selected ? @"Settings_Title_Label_Selected" : @"Settings_Title_Label" toLabel:_conditionLabel];
-
+    _checkmarkImageView.image = [UIImage imageNamed:_checkmarkButton.selected ? @"CheckMark" : @"CheckMarkUnchecked"];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

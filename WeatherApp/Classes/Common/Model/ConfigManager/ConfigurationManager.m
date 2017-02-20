@@ -93,6 +93,24 @@
     [self.settingsDict writeToFile:[self configFilePath] atomically:YES];
 }
 
+#pragma mark - Helpers
+
+- (BOOL)isHumidityShown
+{
+    return [[ConfigManager.settingsDict valueForKeyPath:condition_humidity_key_path] boolValue];
+}
+
+- (BOOL)isPressureShown
+{
+    return [[ConfigManager.settingsDict valueForKeyPath:condition_pressure_key_path] boolValue];
+}
+
+- (BOOL)isWindSpeedShown
+{
+    return [[ConfigManager.settingsDict valueForKeyPath:condition_wind_speed_key_path] boolValue];
+}
+
+
 #pragma mark - Location manager Delegate
 
 - (void)locationManager:(CLLocationManager*)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
