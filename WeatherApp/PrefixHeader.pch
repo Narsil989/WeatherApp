@@ -1,0 +1,26 @@
+//
+//  PrefixHeader.pch
+//  WeatherApp
+//
+//  Created by Dejan Kraguljac  on 17/02/17.
+//  Copyright © 2017 Dejan Kraguljac . All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+#ifdef __OBJC__
+#import <ChameleonFramework/Chameleon.h>
+#import <AFNetworking.h>
+#import "WAStyle.h"
+#import "LoadingView.h"
+#import "UIColor+WA.h"
+#import "NSString+WA.h"
+#import "NSDictionary+WA.h"
+#import "ConfigurationManager.h"
+#import "CoreDataManager.h"
+#import "UrlsConfig.h"
+
+#define ConfigManager [ConfigurationManager sharedInstance]
+
+#endif
+#endif /* PrefixHeader_pch */

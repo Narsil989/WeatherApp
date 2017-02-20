@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Condition</key>
+	<dict>
+		<key>ShowHumidity</key>
+		<true/>
+		<key>ShowPressure</key>
+		<true/>
+		<key>ShowWindSpeed</key>
+		<false/>
+	</dict>
+	<key>UseUSUnits</key>
+	<false/>
+	<key>UseSIUnits</key>
+	<true/>
+</dict>
+</plist>
