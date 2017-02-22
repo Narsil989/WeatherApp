@@ -10,6 +10,8 @@
 
 @interface AbstractDataSource : NSObject
 
+@property (nonatomic, strong) AFHTTPSessionManager *manager;
+
 + (void)setBaseUrl:(NSString *)baseUrl;
 
 - (void)getDataWithParameters:(NSDictionary *)parameters parserClass:(Class)parserClass andCompletionBlock:(void (^)(BOOL success, NSError *error, NSArray *dataArray))completionBlock;

@@ -112,31 +112,6 @@ static NSString* _darkskyToken;
     
 }
 
-- (void)getUserCityWithcompletionBlock:(void (^)(BOOL, NSError *, NSArray *))completionBlock
-{
-    [AbstractDataSource setBaseUrl:[self getNearbyPlaceUrl]];
-    
-    if (!_geonameDS) _geonameDS = [AbstractDataSource new];
-    
-    if (!ConfigManager.userCity.latitude.length || !ConfigManager.userCity.longitude.length || !ConfigManager.userCity.longitude || !ConfigManager.userCity.latitude)
-    {
-        if (completionBlock)
-            completionBlock(NO, nil, nil);
-        return;
-    }
-    
-    [_geonameDS getDataWithParameters:@{@"lat" : ConfigManager.userCity.latitude,
-                                        @"lng" : ConfigManager.userCity.longitude,
-                                        @"username": @"narsil"}
-                          parserClass:[CityParser class] andCompletionBlock:^(BOOL success, NSError *error, NSArray *dataArray) {
-        
-        if (completionBlock)
-            completionBlock(success, error, dataArray);
-        
-    }];
-    
-}
-
 - (void)getCityWithSearchString:(NSString *)searchString WithcompletionBlock:(void (^)(BOOL done, NSError *err, NSArray *arr))completionBlock
 {
     if (!searchString.length)

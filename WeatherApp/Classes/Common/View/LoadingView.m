@@ -9,9 +9,7 @@
 #import "LoadingView.h"
 
 @implementation LoadingView
-{
-    
-}
+
 #pragma mark - init methods
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -33,8 +31,6 @@
     }
     return self;
 }
-
-
 
 - (void)commonInit
 {
@@ -69,7 +65,7 @@
 {
     LoadingView *loading = [[LoadingView alloc] initWithFrame:view.bounds];
     
-    loading.titleLabel.text = @"Hold my beer.";
+    loading.titleLabel.text = @"Hold my beer";
     [view addSubview:loading];
     
     [loading showLoadingWithCompletionBlock:^{
@@ -86,7 +82,8 @@
 {
     LoadingView *loading = [[LoadingView alloc] initWithFrame:view.bounds];
 
-    loading.titleLabel.text = @"Hold my beer.";
+    loading.titleLabel.text = @"Hold my beer";
+    
     [view addSubview:loading];
 
     [loading showLoading];
@@ -98,6 +95,12 @@
 {
     self.transform = CGAffineTransformMakeScale(0, 0);
     self.alpha = 0;
+    
+    [self.mainTimer invalidate];
+    self.mainTimer = nil;
+    
+    self.mainTimer = [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(onTick:) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.mainTimer forMode:NSRunLoopCommonModes];
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
@@ -116,10 +119,10 @@
     self.alpha = 0;
     
     [self.mainTimer invalidate];
+    self.mainTimer = nil;
     
-    NSTimer *timer = [NSTimer timerWithTimeInterval:0.5 target:self selector:@selector(onTick:) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
-    self.mainTimer = timer;
+    self.mainTimer = [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(onTick:) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.mainTimer forMode:NSRunLoopCommonModes];
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
@@ -128,9 +131,11 @@
         
     } completion:^(BOOL finished) {
         
-        if (completionBlock)
-            completionBlock();
-        
+        if (finished)
+        {
+            if (completionBlock)
+                completionBlock();
+        }
     }];
     
 }
@@ -176,6 +181,7 @@
         
     } completion:^(BOOL finished) {
         
+        [self.mainTimer invalidate];
         [self removeFromSuperview];
         
     }];
@@ -192,9 +198,15 @@
         
     } completion:^(BOOL finished) {
         
-        if (completionBlock)
-            completionBlock();
-        [self removeFromSuperview];
+        if (finished)
+        {
+            [self.mainTimer invalidate];
+            [self removeFromSuperview];
+            
+            if (completionBlock)
+                completionBlock();
+        }
+        
         
     }];
 }
@@ -210,26 +222,16 @@
     return nil;
 }
 
-#pragma mark - Timer methods
-
-- (void)startTimerForLabel
-{
-    [self.mainTimer invalidate];
-    
-    NSTimer *timer = [NSTimer timerWithTimeInterval:0.5 target:self selector:@selector(onTick:) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
-    
-    self.mainTimer = timer;
-}
-
 - (void)onTick:(NSTimer *)timer
 {
-    if ([self.titleLabel.text isEqualToString:@"Hold my beer."]) {
+    if ([self.titleLabel.text isEqualToString:@"Hold my beer"]) {
+        self.titleLabel.text = @"Hold my beer.";
+    } else if ([self.titleLabel.text isEqualToString:@"Hold my beer."]) {
         self.titleLabel.text = @"Hold my beer..";
     } else if ([self.titleLabel.text isEqualToString:@"Hold my beer.."]) {
         self.titleLabel.text = @"Hold my beer...";
-    } else if ([self.titleLabel.text isEqualToString:@"Hold my beer..."]) {
-        self.titleLabel.text = @"Hold my beer.";
+    }else if ([self.titleLabel.text isEqualToString:@"Hold my beer..."]) {
+        self.titleLabel.text = @"Hold my beer";
     }
 }
 

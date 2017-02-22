@@ -20,6 +20,7 @@
 #import "CoreDataManager.h"
 #import "UrlsConfig.h"
 #import "CommonAlertView.h"
+#import "CityEntity+CoreDataProperties.h"
 
 #define ConfigManager [ConfigurationManager sharedInstance]
 #define DataManager [CoreDataManager sharedManager]

@@ -23,18 +23,13 @@
     NSManagedObjectContext *_mainManagedObjectContext;
     BOOL alertShown;
     BOOL dataIsLoading;
-    BOOL waitingForUserLocation;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    waitingForUserLocation = YES;
-    
     _mainManagedObjectContext = [DataManager mainManagedObjectContext];
-    
-    NSLog([AFNetworkReachabilityManager sharedManager].reachable ? @"YES, is reachable" : @"NO it is not");
     
     _noInternetLabel.text = @"No internet connection, please check Your internet settings.";
     [WAStyle applyStyle:@"Settings_Title_Label" toLabel:_noInternetLabel];
@@ -68,6 +63,8 @@
     }];
 }
 
+#pragma  mark - Location updates
+
 - (void)userAcceptedUsingLocation
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLocationUpdated:) name:@"UserLocationUpdated" object:nil];
@@ -97,6 +94,8 @@
     }
 }
 
+#pragma mark - Load data
+
 - (void)loadLocalData
 {
     NSArray *citiesArray = [DataManager citiesForSearchQuery:@"isSelected == YES"];
@@ -122,13 +121,21 @@
                 
                 _currentCity = [arr firstObject];
                 [DataManager setMainCitySelectAndDeselctOther:_currentCity];
-                [weakSelf loadWeather];
                 
+                [LoadingView hideLoadingViewForView:self.view WithCompletionBlock:^{
+                    
+                    if (weakSelf.loadDataFinished)
+                        weakSelf.loadDataFinished();
+                    
+                }];
             }];
         }
         else
-            [weakSelf loadWeather];
-        
+            [LoadingView hideLoadingViewForView:self.view WithCompletionBlock:^{
+                if (weakSelf.loadDataFinished)
+                    weakSelf.loadDataFinished();
+                
+            }];
     }];
     
 }
@@ -145,7 +152,11 @@
             {
                 _currentCity = [itemsArray firstObject];
                 [weakSelf selectUserCityAndDeselctOthers];
-                [weakSelf loadWeather];
+                [LoadingView hideLoadingViewForView:self.view WithCompletionBlock:^{
+                    if (weakSelf.loadDataFinished)
+                        weakSelf.loadDataFinished();
+                    
+                }];
             }
             else
             {
@@ -164,26 +175,6 @@
 - (void)selectUserCityAndDeselctOthers
 {
     [DataManager setMainCitySelectAndDeselctOther:_currentCity];
-}
-
-- (void)loadWeather
-{
-    __weak typeof(self)weakSelf = self;
-    [_forecastDS getWeatherWithLongitude:_currentCity.longitude andLatitude:_currentCity.latitude WithcompletionBlock:^(BOOL isDone, NSError *err, NSArray *arr) {
-        
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        
-        ConfigManager.userWeather = [arr firstObject];
-        
-        [LoadingView hideLoadingViewForView:weakSelf.view WithCompletionBlock:^{
-            
-            if (strongSelf.loadDataFinished)
-                strongSelf.loadDataFinished();
-            
-        }];
-        
-    }];
-    
 }
 
 #pragma mark - Create first time run data
@@ -225,6 +216,8 @@
     
 }
 
+#pragma mark - Helpers
+
 - (void)showAlertViewController:(NSNotification *)notif
 {
     NSDictionary *dict =  notif.userInfo;
@@ -259,6 +252,8 @@
     [self presentViewController:chooseAlert animated:YES completion:nil];
 }
 
+#pragma mark -
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -266,6 +261,8 @@
 
 - (void)dealloc
 {
+    [_forecastDS.manager.operationQueue cancelAllOperations];
+    _forecastDS = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

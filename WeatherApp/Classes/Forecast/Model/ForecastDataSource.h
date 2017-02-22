@@ -19,8 +19,6 @@
 
 - (void)getUserCityWithData:(NSDictionary *)dataDict andCompletionBlock:(void (^)(BOOL, NSError *, NSArray *))completionBlock;
 
-- (void)getUserCityWithcompletionBlock:(void (^)(BOOL done, NSError *err, NSArray *arr))completionBlock;
-
 - (void)getCityWithSearchString:(NSString *)searchString WithcompletionBlock:(void (^)(BOOL done, NSError *err, NSArray *arr))completionBlock;
 
 - (void)getWeatherWithLongitude:(NSString *)lng andLatitude:(NSString *)lat WithcompletionBlock:(void (^)(BOOL, NSError *, NSArray *))completionBlock;

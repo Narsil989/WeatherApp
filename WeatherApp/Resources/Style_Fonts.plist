@@ -16,20 +16,6 @@
 		<integer>255</integer>
 		<key>font_color_opacity</key>
 		<real>1</real>
-		<key>shadow_offset_width</key>
-		<integer>0</integer>
-		<key>shadow_offset_height</key>
-		<integer>0</integer>
-		<key>shadow_color_red</key>
-		<integer>0</integer>
-		<key>shadow_color_green</key>
-		<integer>0</integer>
-		<key>shadow_color_blue</key>
-		<integer>0</integer>
-		<key>shadow_color_opacity</key>
-		<real>0</real>
-		<key>shadow_radius</key>
-		<real>0</real>
 	</dict>
 	<key>Temperature_Label_Big</key>
 	<dict>
@@ -45,20 +31,6 @@
 		<integer>255</integer>
 		<key>font_color_opacity</key>
 		<real>1</real>
-		<key>shadow_offset_width</key>
-		<integer>0</integer>
-		<key>shadow_offset_height</key>
-		<integer>0</integer>
-		<key>shadow_color_red</key>
-		<integer>0</integer>
-		<key>shadow_color_green</key>
-		<integer>0</integer>
-		<key>shadow_color_blue</key>
-		<integer>0</integer>
-		<key>shadow_color_opacity</key>
-		<real>0</real>
-		<key>shadow_radius</key>
-		<real>0</real>
 	</dict>
 	<key>Temperature_Label_Mid</key>
 	<dict>
@@ -74,20 +46,6 @@
 		<integer>255</integer>
 		<key>font_color_opacity</key>
 		<real>1</real>
-		<key>shadow_offset_width</key>
-		<integer>0</integer>
-		<key>shadow_offset_height</key>
-		<integer>0</integer>
-		<key>shadow_color_red</key>
-		<integer>0</integer>
-		<key>shadow_color_green</key>
-		<integer>0</integer>
-		<key>shadow_color_blue</key>
-		<integer>0</integer>
-		<key>shadow_color_opacity</key>
-		<real>0</real>
-		<key>shadow_radius</key>
-		<real>0</real>
 	</dict>
 	<key>Temperature_Label_Small</key>
 	<dict>
@@ -103,20 +61,6 @@
 		<integer>255</integer>
 		<key>font_color_opacity</key>
 		<real>1</real>
-		<key>shadow_offset_width</key>
-		<integer>0</integer>
-		<key>shadow_offset_height</key>
-		<integer>0</integer>
-		<key>shadow_color_red</key>
-		<integer>0</integer>
-		<key>shadow_color_green</key>
-		<integer>0</integer>
-		<key>shadow_color_blue</key>
-		<integer>0</integer>
-		<key>shadow_color_opacity</key>
-		<real>0</real>
-		<key>shadow_radius</key>
-		<real>0</real>
 	</dict>
 	<key>City_Name_Label</key>
 	<dict>
@@ -132,20 +76,6 @@
 		<integer>255</integer>
 		<key>font_color_opacity</key>
 		<real>1</real>
-		<key>shadow_offset_width</key>
-		<integer>0</integer>
-		<key>shadow_offset_height</key>
-		<integer>0</integer>
-		<key>shadow_color_red</key>
-		<integer>0</integer>
-		<key>shadow_color_green</key>
-		<integer>0</integer>
-		<key>shadow_color_blue</key>
-		<integer>0</integer>
-		<key>shadow_color_opacity</key>
-		<real>0</real>
-		<key>shadow_radius</key>
-		<real>0</real>
 	</dict>
 	<key>Loading_Title_Label</key>
 	<dict>
@@ -161,20 +91,6 @@
 		<integer>100</integer>
 		<key>font_color_opacity</key>
 		<real>1</real>
-		<key>shadow_offset_width</key>
-		<integer>0</integer>
-		<key>shadow_offset_height</key>
-		<integer>0</integer>
-		<key>shadow_color_red</key>
-		<integer>0</integer>
-		<key>shadow_color_green</key>
-		<integer>0</integer>
-		<key>shadow_color_blue</key>
-		<integer>0</integer>
-		<key>shadow_color_opacity</key>
-		<real>0</real>
-		<key>shadow_radius</key>
-		<real>0</real>
 	</dict>
 	<key>Settings_Title_Label</key>
 	<dict>
@@ -190,20 +106,6 @@
 		<integer>80</integer>
 		<key>font_color_opacity</key>
 		<real>1</real>
-		<key>shadow_offset_width</key>
-		<integer>0</integer>
-		<key>shadow_offset_height</key>
-		<integer>0</integer>
-		<key>shadow_color_red</key>
-		<integer>0</integer>
-		<key>shadow_color_green</key>
-		<integer>0</integer>
-		<key>shadow_color_blue</key>
-		<integer>0</integer>
-		<key>shadow_color_opacity</key>
-		<real>0</real>
-		<key>shadow_radius</key>
-		<real>0</real>
 	</dict>
 	<key>Settings_Title_Label_Selected</key>
 	<dict>
@@ -219,20 +121,6 @@
 		<integer>215</integer>
 		<key>font_color_opacity</key>
 		<integer>1</integer>
-		<key>shadow_offset_width</key>
-		<integer>0</integer>
-		<key>shadow_offset_height</key>
-		<integer>0</integer>
-		<key>shadow_color_red</key>
-		<integer>0</integer>
-		<key>shadow_color_green</key>
-		<integer>0</integer>
-		<key>shadow_color_blue</key>
-		<integer>0</integer>
-		<key>shadow_color_opacity</key>
-		<real>0</real>
-		<key>shadow_radius</key>
-		<real>0</real>
 	</dict>
 	<key>Temperature_Label_VeryBig</key>
 	<dict>
@@ -248,20 +136,36 @@
 		<integer>255</integer>
 		<key>font_color_opacity</key>
 		<real>1</real>
-		<key>shadow_offset_width</key>
-		<integer>0</integer>
-		<key>shadow_offset_height</key>
-		<integer>0</integer>
-		<key>shadow_color_red</key>
-		<integer>0</integer>
-		<key>shadow_color_green</key>
-		<integer>0</integer>
-		<key>shadow_color_blue</key>
-		<integer>0</integer>
-		<key>shadow_color_opacity</key>
-		<real>0</real>
-		<key>shadow_radius</key>
-		<real>0</real>
+	</dict>
+	<key>Text_Field_Inactive</key>
+	<dict>
+		<key>font</key>
+		<string>Existence-Light</string>
+		<key>font_size</key>
+		<integer>13</integer>
+		<key>font_color_red</key>
+		<integer>80</integer>
+		<key>font_color_green</key>
+		<integer>80</integer>
+		<key>font_color_blue</key>
+		<integer>80</integer>
+		<key>font_color_opacity</key>
+		<real>1</real>
+	</dict>
+	<key>Text_Field_Active</key>
+	<dict>
+		<key>font</key>
+		<string>Existence-Light</string>
+		<key>font_size</key>
+		<integer>13</integer>
+		<key>font_color_red</key>
+		<integer>50</integer>
+		<key>font_color_green</key>
+		<integer>50</integer>
+		<key>font_color_blue</key>
+		<integer>50</integer>
+		<key>font_color_opacity</key>
+		<integer>1</integer>
 	</dict>
 </dict>
 </plist>

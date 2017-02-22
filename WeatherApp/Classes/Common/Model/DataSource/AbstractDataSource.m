@@ -32,10 +32,10 @@ static NSString* _baseUrl;
                 completionBlock(NO, nil, nil);
         }
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    _manager = [AFHTTPSessionManager manager];
+    [_manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    [manager GET:_baseUrl parameters:parameters progress:nil success:^(NSURLSessionTask *task, id responseObject) {
+    [_manager GET:_baseUrl parameters:parameters progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         
         AbstractParser *parser = [parserClass new];
         [parser parseData:responseObject];

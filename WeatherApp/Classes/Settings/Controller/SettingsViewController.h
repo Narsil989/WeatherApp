@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingsViewController : UIViewController <NSFetchedResultsControllerDelegate>
+@interface SettingsViewController : UIViewController
 
 @property (nonatomic, copy) void (^shouldRefreshWeather)();
 @property (nonatomic, copy) void (^shouldUpdateConditionViews)();

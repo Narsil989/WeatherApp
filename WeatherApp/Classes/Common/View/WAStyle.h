@@ -14,6 +14,7 @@
 + (void)applyStyle:(NSString *)key toLabel:(UILabel *)label;
 + (UIColor *)colorForKey:(NSString *)key;
 + (void)applyFontStyle:(NSString *)key toButton:(UIButton *)button forState:(UIControlState)state;
++ (UIFont *)fontForKey:(NSString *)key;
 
 
 

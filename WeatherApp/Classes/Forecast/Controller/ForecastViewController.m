@@ -62,9 +62,12 @@
     
     __weak IBOutlet UITableView *_searchResultsTableView;
     
+    __weak IBOutlet UILabel *_noInternetLabel;
+    
     NSArray *_cityArray;
     
     BOOL _searchModeAnimationStarted;
+    BOOL _dataIsLoading;
     
     NSManagedObjectContext *_mainObjectContext;
     
@@ -83,6 +86,16 @@
     
     _mainObjectContext = [DataManager mainManagedObjectContext];
     
+    if (!_currentWeather)
+    {
+        self.view.backgroundColor = [UIColor flatSkyBlueColor];
+    }
+    
+    _noInternetLabel.hidden = YES;
+    
+    if (_dataIsLoading)
+        [LoadingView showLoadingViewInView:self.view];
+    
     _currentCity = [[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject];
     
     [self layoutGUI];
@@ -93,13 +106,25 @@
     [super viewDidAppear:animated];
     
     if (![AFNetworkReachabilityManager sharedManager].reachable)
-        [CommonAlertView showCommonAlertViewOnController:self withTitle:@"Error" andMessage:@"No internet connection, please check Your internet settings."];
+        _noInternetLabel.hidden = NO;
+    
+    __weak typeof(self)weakSelf = self;
+    
+    [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status){
+        
+        if (status == AFNetworkReachabilityStatusReachableViaWWAN || status == AFNetworkReachabilityStatusReachableViaWiFi)
+            
+            [weakSelf loadData];
+        else
+        {
+            _noInternetLabel.hidden = NO;
+        }
+    }];
     
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-    
     return UIStatusBarStyleLightContent;
 }
 
@@ -108,29 +133,6 @@
     [super viewDidLoad];
     
     mainScreenWidth = [UIScreen mainScreen].bounds.size.width;
-    
-    
-    __weak typeof(self)weakSelf = self;
-    
-    [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status){
-        
-        if (status == AFNetworkReachabilityStatusReachableViaWWAN || status == AFNetworkReachabilityStatusReachableViaWiFi)
-            
-            [LoadingView showLoadingViewInView:weakSelf.view WithCompletionBlock:^{
-                
-                [weakSelf loadData];
-                
-            }];
-        else
-        {
-            if (![self presentedViewController])
-            {
-                
-                [weakSelf resetSearchTextField:YES andHideKeyBoard:YES andDisableSearch:YES];
-                //[CommonAlertView showCommonAlertViewOnController:weakSelf withTitle:@"Error" andMessage:@"No internet connection, please check Your internet settings."];
-            }
-        }
-    }];
     
     [self addObservers];
     
@@ -161,10 +163,25 @@
     [WAStyle applyStyle:@"Temperature_Label_Small" toLabel:_presureLabel];
     
     [_cityLabel setAdjustsFontSizeToFitWidth:YES];
-
     
     [_searchResultsTableView setSeparatorColor:[UIColor clearColor]];
     
+    [self applyStyleToSearchTextField];
+    [self addRoundedCornersToCancelButton];
+}
+
+- (void)applyStyleToSearchTextField
+{
+    NSDictionary *placeholderFontAttributes = @{NSFontAttributeName :[WAStyle fontForKey:@"Text_Field_Inactive"],
+                                                NSForegroundColorAttributeName : [WAStyle colorForKey:@"Text_Field_Inactive"]};
+    
+    _searchTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Type something" attributes:placeholderFontAttributes];
+    _searchTextField.font = [WAStyle fontForKey:@"Text_Field_Active"];
+    _searchTextField.textColor = [WAStyle colorForKey:@"Text_Field_Active"];
+}
+
+- (void)addRoundedCornersToCancelButton
+{
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:_cancelButtonContainerView.bounds byRoundingCorners:(UIRectCornerTopRight | UIRectCornerBottomRight) cornerRadii:CGSizeMake(10.0, 10.0)];
     
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
@@ -178,7 +195,7 @@
     if (!_forecastDS) _forecastDS = [ForecastDataSource new];
     [_forecastDS setMaxRows:@"10"];
     [_forecastDS setUsername:@"narsil"];
-
+    
     [_forecastDS setDarkSkyToken:@"c445625667ffb6939409211d3255ff87"];
 }
 
@@ -207,7 +224,7 @@
     
 }
 
-#pragma mark Search TextField setup
+#pragma mark - Search TextField setup
 
 - (void)setupTextField
 {
@@ -216,15 +233,16 @@
     _searchTextField.rightViewMode = UITextFieldViewModeAlways;
     
     [self addSearchIconToTextField];
-    
+
     [self addClearButtonToTextField];
 }
 
 - (void)addSearchIconToTextField
 {
-    UIImageView *searchIconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"SearchIcon"]];
+    UIImageView *searchIconImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"SearchIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    searchIconImageView.tintColor = _currentWeather.backgroudColor ? _currentWeather.backgroudColor : [UIColor flatSkyBlueColor];
     searchIconImageView.frame = CGRectMake(10, 0, searchIconImageView.frame.size.width, searchIconImageView.frame.size.height);
-
+    
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, searchIconImageView.frame.size.width * 2, searchIconImageView.frame.size.height)];
     
     [paddingView addSubview:searchIconImageView];
@@ -261,21 +279,13 @@
     [self setSearchModeEnabled:YES];
 }
 
-#pragma mark Clear search TextField
-
-- (void)clearTextField
-{
-    [self resetSearchTextField:YES andHideKeyBoard:NO andDisableSearch:NO];
-    if (![_searchTextField isFirstResponder]) [_searchTextField becomeFirstResponder];
-}
-
 #pragma mark - LoadData
 
 - (void)loadData
 {
     _currentCity = [[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject];
     
-    _currentWeather = ConfigManager.userWeather;
+    _dataIsLoading = YES;
     
     if (!_currentCity)
         [self loadDefaultCityData];
@@ -289,11 +299,24 @@
 {
     __weak typeof(self)weakSelf = self;
     
-    [_forecastDS getDefaultCityWithcompletionBlock:^(BOOL isDone, NSError *err, NSArray *arr) {
-            
-        _currentCity = [arr firstObject];
-        [weakSelf loadWeather];
-            
+    [_forecastDS getDefaultCityWithcompletionBlock:^(BOOL success, NSError *err, NSArray *arr) {
+        
+        if (success && !err)
+        {
+            _currentCity = [arr firstObject];
+            [weakSelf loadWeather];
+        }
+        else if (err && err.code == -1009)
+        {
+            _noInternetLabel.hidden = NO;
+            _dataIsLoading = NO;
+            [weakSelf bindGUI];
+        }
+        else
+        {
+            [weakSelf bindGUI];
+        }
+        
     }];
 }
 
@@ -306,24 +329,23 @@
         
         
         if (success && !err)
+        {
             _currentWeather = [arr firstObject];
+            _noInternetLabel.hidden = YES;
+        }
         else
             _currentWeather = nil;
         
         if (err && err.code == -1009)
         {
-            if (![self presentedViewController])
-            {
-                [weakSelf resetSearchTextField:YES andHideKeyBoard:YES andDisableSearch:YES];
-                //[CommonAlertView showCommonAlertViewOnController:weakSelf withTitle:@"Error" andMessage:err.localizedDescription];
-            }
+            _noInternetLabel.hidden = NO;
         }
+        
+        _dataIsLoading = NO;
         
         [LoadingView hideLoadingViewForView:weakSelf.view WithCompletionBlock:^{
             
             [strongSelf bindGUI];
-            
-            // need to add error handling
             
             [strongSelf resetSearchTextField:YES andHideKeyBoard:YES andDisableSearch:YES];
             
@@ -346,9 +368,12 @@
     _weatherStateLabel.text = _currentWeather.summary;
     _lowestTeperatureLabel.text = [NSString temperatureString:[self singleDecimalStringFromNumber:_currentWeather.minTemperature]];
     _highestTemperatureLabel.text = [NSString temperatureString:[self singleDecimalStringFromNumber:_currentWeather.maxTemperature]];
+    _noInternetLabel.text = @"No internet connection, please check Your internet settings.";
+    [WAStyle applyStyle:@"Settings_Title_Label" toLabel:_noInternetLabel];
+    _noInternetLabel.hidden = YES;
     
     [_cityLabel setAdjustsFontSizeToFitWidth:YES];
-
+    
     [self layoutGUI];
     
 }
@@ -358,7 +383,10 @@
 - (void)layoutGUI
 {
     if (_currentWeather)
+    {
         self.view.backgroundColor = _currentWeather.backgroudColor;
+        [self addSearchIconToTextField];
+    }
 }
 
 #pragma mark - TextField Delegate
@@ -388,11 +416,12 @@
         [LoadingView showLoadingViewInView:self.view];
         
         [_forecastDS getCityWithSearchString:textField.text WithcompletionBlock:^(BOOL done, NSError *err, NSArray *arr) {
-           
+            
             [LoadingView hideLoadingViewForView:weakSelf.view WithCompletionBlock:^{
-               
+                
                 if (done && !err)
                 {
+                    _noInternetLabel.hidden = YES;
                     _cityArray = [NSArray arrayWithArray:arr];
                 }
                 else
@@ -400,11 +429,19 @@
                     _cityArray = nil;
                 }
                 
-                [_searchResultsTableView reloadData];
-                
                 if ([arr count])
                     [textField resignFirstResponder];
+                if (err && err.code == -1009)
+                {
+                    if (![self presentedViewController])
+                    {
+                        [weakSelf resetSearchTextField:YES andHideKeyBoard:YES andDisableSearch:YES];
+                    }
+                    
+                    _noInternetLabel.hidden = NO;
+                }
                 
+                [_searchResultsTableView reloadData];
             }];
         }];
         
@@ -474,6 +511,16 @@
     } completion:nil];
 }
 
+
+#pragma mark Clear search TextField
+
+- (void)clearTextField
+{
+    [self resetSearchTextField:YES andHideKeyBoard:NO andDisableSearch:NO];
+    if (![_searchTextField isFirstResponder]) [_searchTextField becomeFirstResponder];
+}
+
+
 #pragma mark - Button actions
 
 - (IBAction)clearButtonTapped:(id)sender
@@ -486,21 +533,16 @@
 - (IBAction)settingsButtonTapped:(id)sender
 {
     SettingsViewController *settingsVC = [SettingsViewController new];
-
+    
     __weak typeof(self)weakSelf = self;
     
     settingsVC.shouldRefreshWeather = ^(){
-        
-       // if ([[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject])
-            //_currentCity = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
-        
-        //[weakSelf loadWeather];
         
         [weakSelf loadData];
     };
     
     settingsVC.shouldUpdateConditionViews = ^(){
-      
+        
         [weakSelf updateConditionViews];
         
     };
@@ -592,7 +634,7 @@
     if ((![ConfigManager isPressureShown] && [ConfigManager isWindSpeedShown]) || ([ConfigManager isPressureShown] && ![ConfigManager isWindSpeedShown]))
         _humidityTrailingConstraint.constant = mainScreenWidth/2;
     if ([ConfigManager isPressureShown] && [ConfigManager isWindSpeedShown])
-         _humidityTrailingConstraint.constant = mainScreenWidth*2/3;
+        _humidityTrailingConstraint.constant = mainScreenWidth*2/3;
     if (![ConfigManager isPressureShown] && ![ConfigManager isWindSpeedShown])
         _humidityTrailingConstraint.constant = 0;
 }
@@ -665,6 +707,8 @@
 
 - (void)dealloc
 {
+    [_forecastDS.manager.operationQueue cancelAllOperations];
+    _forecastDS = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (void)didReceiveMemoryWarning

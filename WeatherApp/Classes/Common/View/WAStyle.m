@@ -25,7 +25,6 @@ static NSString *_styleDictPath = @"Style_Fonts.plist";
     
     if (!dictionary)
     {
-        NSLog(@"%@: style %@ not found", [self.class description], key);
         return;
     }
     
@@ -35,13 +34,6 @@ static NSString *_styleDictPath = @"Style_Fonts.plist";
                                       green:[(NSNumber *)[dictionary valueForKey:@"font_color_green"] floatValue] / 255.0
                                        blue:[(NSNumber *)[dictionary valueForKey:@"font_color_blue"] floatValue] / 255.0
                                       alpha:[(NSNumber *)[dictionary valueForKey:@"font_color_opacity"] floatValue]];
-    
-    label.shadowOffset = CGSizeMake([(NSNumber *)[dictionary valueForKey:@"shadow_offset_width"] floatValue], [(NSNumber *)[dictionary valueForKey:@"shadow_offset_height"] floatValue]);
-    
-    label.shadowColor = [UIColor colorWithRed:[(NSNumber *)[dictionary valueForKey:@"shadow_color_red"] floatValue] / 255.0
-                                        green:[(NSNumber *)[dictionary valueForKey:@"shadow_color_green"] floatValue] / 255.0
-                                         blue:[(NSNumber *)[dictionary valueForKey:@"shadow_color_blue"] floatValue] / 255.0
-                                        alpha:[(NSNumber *)[dictionary valueForKey:@"shadow_color_opacity"] floatValue]];
 }
 
 + (UIColor *)colorForKey:(NSString *)key
@@ -65,6 +57,27 @@ static NSString *_styleDictPath = @"Style_Fonts.plist";
                            green:[(NSNumber *)[dictionary valueForKey:@"font_color_green"] floatValue] / 255.0
                             blue:[(NSNumber *)[dictionary valueForKey:@"font_color_blue"] floatValue] / 255.0
                            alpha:[(NSNumber *)[dictionary valueForKey:@"font_color_opacity"] floatValue]];
+}
+
++ (UIFont *)fontForKey:(NSString *)key
+{
+    NSDictionary *styleDict = [self styleDict];
+    
+    if (!styleDict)
+    {
+        return [UIFont systemFontOfSize:16.];
+    }
+    
+    NSDictionary *dictionary = [styleDict valueForKeyPath:key];
+    
+    if (!dictionary)
+    {
+        return [UIFont systemFontOfSize:16.];
+    }
+    
+    UIFont *font = [UIFont fontWithName:[dictionary valueForKey:@"font"]
+                                   size:[(NSNumber *)[dictionary valueForKey:@"font_size"] floatValue]];
+    return font ? font : [UIFont systemFontOfSize:16.];
 }
 
 + (void)applyFontStyle:(NSString *)key toButton:(UIButton *)button forState:(UIControlState)state
@@ -91,14 +104,6 @@ static NSString *_styleDictPath = @"Style_Fonts.plist";
                                            blue:[(NSNumber *)[dictionary valueForKey:@"font_color_blue"] floatValue] / 255.0
                                           alpha:[(NSNumber *)[dictionary valueForKey:@"font_color_opacity"] floatValue]]
                  forState:state];
-    
-    [button setTitleShadowColor:[UIColor colorWithRed:[(NSNumber *)[dictionary valueForKey:@"shadow_color_red"] floatValue] / 255.0
-                                                green:[(NSNumber *)[dictionary valueForKey:@"shadow_color_green"] floatValue] / 255.0
-                                                 blue:[(NSNumber *)[dictionary valueForKey:@"shadow_color_blue"] floatValue] / 255.0
-                                                alpha:[(NSNumber *)[dictionary valueForKey:@"shadow_color_opacity"] floatValue]]
-                       forState:state];
-    
-    button.titleLabel.shadowOffset = CGSizeMake([(NSNumber *)[dictionary valueForKey:@"shadow_offset_width"] floatValue], [(NSNumber *)[dictionary valueForKey:@"shadow_offset_height"] floatValue]);
 }
 
 

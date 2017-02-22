@@ -17,9 +17,8 @@
 {
     __weak IBOutlet UITableView *_tableView;
     
-    NSFetchedResultsController *_fetchController;
     NSManagedObjectContext *_mainManagedObjectContext;
-    NSArray *array;
+    NSArray *_dataArray;
     
 }
 @end
@@ -34,11 +33,7 @@
     
     [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status){
         
-        if (status == AFNetworkReachabilityStatusReachableViaWWAN || status == AFNetworkReachabilityStatusReachableViaWiFi)
-        {
-            
-        }
-        else
+        if (!(status == AFNetworkReachabilityStatusReachableViaWWAN || status == AFNetworkReachabilityStatusReachableViaWiFi))
         {
             [CommonAlertView showCommonAlertViewOnController:weakSelf withTitle:@"Error" andMessage:@"No internet connection, please check Your internet settings."];
         }
@@ -76,15 +71,12 @@
 
 - (void)bindGUI
 {
-    [_tableView reloadData];//toooooooooooooooooooooooooooooooooooooooooooo
+    [_tableView reloadData];
 }
-
-
-
 
 - (void)loadData
 {
-    array = [DataManager citiesForSearchQuery:@""];
+    _dataArray = [DataManager citiesForSearchQuery:@""];
     
     [self bindGUI];
 }
@@ -92,7 +84,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0)
-        return [array count];
+        return [_dataArray count];
     else if (section == 1)
         return 3;
     else
@@ -106,14 +98,14 @@
     {
         SettingsCityCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SettingsCityCellIdentifier"];
         
-        cell.cityEntitiy = ((CityEntity *)[array objectAtIndex:indexPath.row]);
+        cell.cityEntitiy = ((CityEntity *)[_dataArray objectAtIndex:indexPath.row]);
         __weak typeof(self)weakSelf = self;
         cell.deleteCityButtonTapped = ^(CityEntity *cityToDelete)
         {
             [weakSelf deleteCityEntity:cityToDelete];
         };
         
-        if (((CityEntity *)[array objectAtIndex:indexPath.row]).isSelected)
+        if (((CityEntity *)[_dataArray objectAtIndex:indexPath.row]).isSelected)
             [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
         
         return cell;
@@ -178,7 +170,7 @@
     
     [self loadData];
     
-    if ([array count] != 0)
+    if ([_dataArray count] != 0)
     if (_shouldRefreshWeather)
         _shouldRefreshWeather();
     
@@ -191,13 +183,15 @@
     if (!city)//if we deleted last selected city select another one
         [((CityEntity *)[[DataManager citiesForSearchQuery:@""] firstObject]) setValue:@YES forKey:@"isSelected"];
     
+    [_mainManagedObjectContext save:nil];
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     if (indexPath.section == 0)
     {
-        CityEntity *selectedEntity = [array objectAtIndex:indexPath.row];
+        CityEntity *selectedEntity = [_dataArray objectAtIndex:indexPath.row];
         [DataManager setMainCitySelectAndDeselctOther:selectedEntity];
         
         [self callShouldRefreshWeatherBlock];
@@ -206,7 +200,7 @@
     else
     {
         CityEntity *selectedCity = [[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject];
-        [tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:[array indexOfObject:selectedCity] inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        [tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:[_dataArray indexOfObject:selectedCity] inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }
 
@@ -222,7 +216,7 @@
 {
     if (indexPath.section == 0)
     {
-        CityEntity *deselectedEntity = [array objectAtIndex:indexPath.row];
+        CityEntity *deselectedEntity = [_dataArray objectAtIndex:indexPath.row];
         [deselectedEntity setValue:@NO forKey:@"isSelected"];
         
         [_mainManagedObjectContext save:nil];
