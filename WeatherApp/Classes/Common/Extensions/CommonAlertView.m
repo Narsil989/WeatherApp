@@ -7,6 +7,7 @@
 //
 
 #import "CommonAlertView.h"
+#import "AppDelegate.h"
 
 @implementation CommonAlertView
 
@@ -15,8 +16,9 @@
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     
     [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
-    
-    [controller presentViewController:alert animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [controller presentViewController:alert animated:YES completion:nil];
+    });
 }
 
 @end

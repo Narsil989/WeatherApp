@@ -73,7 +73,7 @@ static NSString* _darkskyToken;
     if (!_geonameDS) _geonameDS = [AbstractDataSource new];
     
     [_geonameDS getDataWithParameters:@{@"q" : @"Osijek",
-                                        @"maxRows" : _maxRows.length ? _maxRows : @"10",
+                                        @"maxRows" : @"1",//_maxRows.length ? _maxRows : @"10",
                                         @"username": @"narsil"}
                           parserClass:[CityEntityParser class] andCompletionBlock:^(BOOL success, NSError *error, NSArray *dataArray) {
        

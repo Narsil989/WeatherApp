@@ -34,6 +34,8 @@
     
     _mainManagedObjectContext = [DataManager mainManagedObjectContext];
     
+    NSLog([AFNetworkReachabilityManager sharedManager].reachable ? @"YES, is reachable" : @"NO it is not");
+    
     _noInternetLabel.text = @"No internet connection, please check Your internet settings.";
     [WAStyle applyStyle:@"Settings_Title_Label" toLabel:_noInternetLabel];
     
@@ -99,7 +101,7 @@
 {
     NSArray *citiesArray = [DataManager citiesForSearchQuery:@"isSelected == YES"];
     
-    if ([citiesArray count] == 0 && [DataManager citiesForSearchQuery:@""])
+    if ([citiesArray count] == 0 && [DataManager citiesForSearchQuery:@""]) //check if there is already selected city
     {
         CityEntity *tmpCity = [[DataManager citiesForSearchQuery:@""] firstObject];
         [tmpCity setValue:@YES forKey:@"isSelected"];
@@ -114,11 +116,12 @@
     
     [LoadingView showLoadingViewInView:self.view WithCompletionBlock:^{
         
-        if (!_currentCity)
+        if (!_currentCity)//still no selected city... get default one
         {
             [wForecastDS getDefaultCityWithcompletionBlock:^(BOOL done, NSError *err, NSArray *arr) {
                 
                 _currentCity = [arr firstObject];
+                [DataManager setMainCitySelectAndDeselctOther:_currentCity];
                 [weakSelf loadWeather];
                 
             }];

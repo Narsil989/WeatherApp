@@ -88,6 +88,15 @@
     [self layoutGUI];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (![AFNetworkReachabilityManager sharedManager].reachable)
+        [CommonAlertView showCommonAlertViewOnController:self withTitle:@"Error" andMessage:@"No internet connection, please check Your internet settings."];
+    
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
     
