@@ -12,10 +12,6 @@
 
 - (void)bindObject
 {
-    //    NSEntityDescription *entity = [NSEntityDescription entityForName:@"CityEntity"
-    //                                              inManagedObjectContext:[[CoreDataManager sharedManager] createBackgroundContext]];
-    //
-    //    CityEntity *item = [[CityEntity alloc] initWithEntity:entity insertIntoManagedObjectContext:[[CoreDataManager sharedManager] createBackgroundContext]];
     
     /*
      
@@ -43,18 +39,32 @@
         {
             
             NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass([CityEntity class])
-                                                      inManagedObjectContext:[[CoreDataManager sharedManager] mainManagedObjectContext]];
+                                                      inManagedObjectContext:[DataManager mainManagedObjectContext]];
             
-            CityEntity *userCity = [[CityEntity alloc] initWithEntity:entity insertIntoManagedObjectContext:[[CoreDataManager sharedManager] mainManagedObjectContext]];
+            NSManagedObjectContext *testManagedObjectContext = [DataManager mainManagedObjectContext];
+            NSArray *tempArray = [DataManager citiesForSearchQuery:[NSString stringWithFormat:@"geonameId == %f", [[item valueForKey:@"geonameId"] floatValue]]];
             
-            userCity.name = [item valueForKey:@"toponymName"];
-            userCity.countryCode = [item valueForKey:@"countryCode"];
-            userCity.geonameId = [[item valueForKey:@"geonameId"] floatValue];
-            userCity.isSelected = NO;
-            userCity.longitude = [item valueForKey:@"lng"];
-            userCity.latitude = [item valueForKey:@"lat"];
+            if ([tempArray count] == 0)
+            {
+                CityEntity *userCity = [[CityEntity alloc] initWithEntity:entity insertIntoManagedObjectContext:testManagedObjectContext];
+                
+                userCity.name = [item valueForKey:@"toponymName"];
+                userCity.countryCode = [item valueForKey:@"countryCode"];
+                userCity.geonameId = [[item valueForKey:@"geonameId"] floatValue];
+                userCity.isSelected = NO;
+                userCity.longitude = [item valueForKey:@"lng"];
+                userCity.latitude = [item valueForKey:@"lat"];
+                
+                [_items addObject:userCity];
+            }
+            else
+                [_items addObject:[tempArray firstObject]];
             
-            [_items addObject:userCity];
+            
+            [testManagedObjectContext save:nil];
+            
+            break;
+            
         }
     }
 }

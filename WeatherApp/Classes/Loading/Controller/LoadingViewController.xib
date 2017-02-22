@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoadingViewController">
             <connections>
-                <outlet property="_refreshButton" destination="e6h-g9-I6a" id="DWe-tm-LrY"/>
+                <outlet property="_noInternetLabel" destination="pnQ-nf-HXm" id="i9l-gB-bgC"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -19,18 +19,19 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e6h-g9-I6a">
-                    <rect key="frame" x="144" y="318" width="87" height="30"/>
-                    <state key="normal" title="REFRESH"/>
-                    <connections>
-                        <action selector="refreshButtonTapped:" destination="-1" eventType="touchUpInside" id="pDr-9x-WCb"/>
-                    </connections>
-                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pnQ-nf-HXm">
+                    <rect key="frame" x="10" y="0.0" width="355" height="667"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="e6h-g9-I6a" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="0e4-w9-AL9"/>
-                <constraint firstItem="e6h-g9-I6a" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="II1-sb-M2b"/>
+                <constraint firstAttribute="trailing" secondItem="pnQ-nf-HXm" secondAttribute="trailing" constant="10" id="1A1-Gs-oXG"/>
+                <constraint firstItem="pnQ-nf-HXm" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="2VQ-vf-Vqn"/>
+                <constraint firstAttribute="bottom" secondItem="pnQ-nf-HXm" secondAttribute="bottom" id="Mct-S2-26m"/>
+                <constraint firstItem="pnQ-nf-HXm" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hBq-Hb-sb6"/>
             </constraints>
             <point key="canvasLocation" x="34.5" y="54.5"/>
         </view>

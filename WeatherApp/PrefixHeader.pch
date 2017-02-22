@@ -19,8 +19,10 @@
 #import "ConfigurationManager.h"
 #import "CoreDataManager.h"
 #import "UrlsConfig.h"
+#import "CommonAlertView.h"
 
 #define ConfigManager [ConfigurationManager sharedInstance]
+#define DataManager [CoreDataManager sharedManager]
 
 #endif
 #endif /* PrefixHeader_pch */

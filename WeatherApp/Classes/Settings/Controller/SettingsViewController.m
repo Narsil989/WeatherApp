@@ -11,6 +11,7 @@
 #import "SettingsCityCell.h"
 #import "SettingsConditionsCell.h"
 #import "SettingsUnitsCell.h"
+#import "CommonAlertView.h"
 
 @interface SettingsViewController ()
 {
@@ -29,7 +30,21 @@
 {
     [super viewDidLoad];
     
-    _mainManagedObjectContext  = [[CoreDataManager sharedManager] mainManagedObjectContext];
+    __weak typeof(self)weakSelf = self;
+    
+    [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status){
+        
+        if (status == AFNetworkReachabilityStatusReachableViaWWAN || status == AFNetworkReachabilityStatusReachableViaWiFi)
+        {
+            
+        }
+        else
+        {
+            [CommonAlertView showCommonAlertViewOnController:weakSelf withTitle:@"Error" andMessage:@"No internet connection, please check Your internet settings."];
+        }
+    }];
+    
+    _mainManagedObjectContext  = [DataManager mainManagedObjectContext];
     [self addLeftNavbarButton];
     [self setupTableView];
     [self loadData];
@@ -69,7 +84,7 @@
 
 - (void)loadData
 {
-    array = [[CoreDataManager sharedManager] citiesForSearchQuery:@""];
+    array = [DataManager citiesForSearchQuery:@""];
     
     [self bindGUI];
 }
@@ -152,10 +167,12 @@
 
 - (void)deleteCityEntity:(CityEntity *)cityToDelete
 {
-    NSArray *objectsToDelete = [[CoreDataManager sharedManager] citiesForSearchQuery:[NSString stringWithFormat:@"geonameId == %f", cityToDelete.geonameId]];
+    NSArray *objectsToDelete = [DataManager citiesForSearchQuery:[NSString stringWithFormat:@"geonameId == %f", cityToDelete.geonameId]];
     
     if ([objectsToDelete count] > 0)
         [_mainManagedObjectContext deleteObject:[objectsToDelete firstObject]];
+    
+    [_mainManagedObjectContext save:nil];
     
     [self checkIfSelectedCityIsDeleted];
     
@@ -169,10 +186,10 @@
 
 - (void)checkIfSelectedCityIsDeleted
 {
-    CityEntity *city = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
+    CityEntity *city = [[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject];
     
     if (!city)//if we deleted last selected city select another one
-        [((CityEntity *)[[[CoreDataManager sharedManager] citiesForSearchQuery:@""] firstObject]) setValue:@YES forKey:@"isSelected"];
+        [((CityEntity *)[[DataManager citiesForSearchQuery:@""] firstObject]) setValue:@YES forKey:@"isSelected"];
     
 }
 
@@ -181,14 +198,14 @@
     if (indexPath.section == 0)
     {
         CityEntity *selectedEntity = [array objectAtIndex:indexPath.row];
-        [selectedEntity setValue:@YES forKey:@"isSelected"];
+        [DataManager setMainCitySelectAndDeselctOther:selectedEntity];
         
         [self callShouldRefreshWeatherBlock];
         
     }
     else
     {
-        CityEntity *selectedCity = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
+        CityEntity *selectedCity = [[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject];
         [tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:[array indexOfObject:selectedCity] inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }
@@ -207,6 +224,8 @@
     {
         CityEntity *deselectedEntity = [array objectAtIndex:indexPath.row];
         [deselectedEntity setValue:@NO forKey:@"isSelected"];
+        
+        [_mainManagedObjectContext save:nil];
     }
 }
 

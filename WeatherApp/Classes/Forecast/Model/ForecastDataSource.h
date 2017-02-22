@@ -15,7 +15,7 @@
 - (void)setMaxRows:(NSString *)maxRows;
 - (void)setDarkSkyToken:(NSString *)token;
 
-- (void)getCityWithcompletionBlock:(void (^)(BOOL done, NSError *err, NSArray *arr))completionBlock;
+- (void)getDefaultCityWithcompletionBlock:(void (^)(BOOL done, NSError *err, NSArray *arr))completionBlock;
 
 - (void)getUserCityWithData:(NSDictionary *)dataDict andCompletionBlock:(void (^)(BOOL, NSError *, NSArray *))completionBlock;
 

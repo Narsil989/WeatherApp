@@ -101,6 +101,7 @@
 		5FA91B3E1E57AE40008B12DF /* SettingsConditionsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FA91B3C1E57AE40008B12DF /* SettingsConditionsCell.xib */; };
 		5FA91B461E57B894008B12DF /* LoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FA91B441E57B894008B12DF /* LoadingViewController.m */; };
 		5FA91B471E57B894008B12DF /* LoadingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FA91B451E57B894008B12DF /* LoadingViewController.xib */; };
+		5FBFBE631E5D00CD002F8503 /* CommonAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FBFBE621E5D00CD002F8503 /* CommonAlertView.m */; };
 		5FBFF98D1E5623D700BC913E /* NSDictionary+WA.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FBFF98C1E5623D700BC913E /* NSDictionary+WA.m */; };
 		5FBFF9A81E56273400BC913E /* CoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FBFF9A21E56273400BC913E /* CoreDataManager.m */; };
 		5FBFF9A91E56273400BC913E /* WeatherApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5FBFF9A31E56273400BC913E /* WeatherApp.xcdatamodeld */; };
@@ -230,6 +231,8 @@
 		5FA91B431E57B894008B12DF /* LoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingViewController.h; sourceTree = "<group>"; };
 		5FA91B441E57B894008B12DF /* LoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingViewController.m; sourceTree = "<group>"; };
 		5FA91B451E57B894008B12DF /* LoadingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingViewController.xib; sourceTree = "<group>"; };
+		5FBFBE611E5D00CD002F8503 /* CommonAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonAlertView.h; sourceTree = "<group>"; };
+		5FBFBE621E5D00CD002F8503 /* CommonAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonAlertView.m; sourceTree = "<group>"; };
 		5FBFF98B1E5623D700BC913E /* NSDictionary+WA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+WA.h"; sourceTree = "<group>"; };
 		5FBFF98C1E5623D700BC913E /* NSDictionary+WA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+WA.m"; sourceTree = "<group>"; };
 		5FBFF9A11E56273400BC913E /* CoreDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataManager.h; sourceTree = "<group>"; };
@@ -601,6 +604,8 @@
 				5FBFF9BD1E5646DF00BC913E /* NSString+WA.m */,
 				5FA91B2A1E579C4C008B12DF /* UIColor+WA.h */,
 				5FA91B2B1E579C4C008B12DF /* UIColor+WA.m */,
+				5FBFBE611E5D00CD002F8503 /* CommonAlertView.h */,
+				5FBFBE621E5D00CD002F8503 /* CommonAlertView.m */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -887,6 +892,7 @@
 				5FA91B3D1E57AE40008B12DF /* SettingsConditionsCell.m in Sources */,
 				5FC7152A1E584FC400C1EEE5 /* LoadingView.m in Sources */,
 				5FBFF9B01E562F9100BC913E /* Weather.m in Sources */,
+				5FBFBE631E5D00CD002F8503 /* CommonAlertView.m in Sources */,
 				5FBFF9A91E56273400BC913E /* WeatherApp.xcdatamodeld in Sources */,
 				5F9350181E54FD3B002A4E29 /* ForecastViewController.m in Sources */,
 				5FC715181E584F8900C1EEE5 /* City.m in Sources */,

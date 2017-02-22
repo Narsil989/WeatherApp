@@ -11,6 +11,7 @@
 #import "NSString+WA.h"
 #import "CityCell.h"
 #import "SettingsViewController.h"
+#import "CommonAlertView.h"
 
 @interface ForecastViewController ()
 {
@@ -43,8 +44,9 @@
     __weak IBOutlet UILabel *_highTemperatureStaticLabel;
     __weak IBOutlet UILabel *_highestTemperatureLabel;
     
-    __weak IBOutlet NSLayoutConstraint *_searchContainerViewHeightConstraint;
     __weak IBOutlet UIButton *_settingsButton;
+    
+    __weak IBOutlet NSLayoutConstraint *_searchContainerViewHeightConstraint;
     
     __weak IBOutlet NSLayoutConstraint *_searchbarMainViewTopContraint;
     __weak IBOutlet NSLayoutConstraint *_searchbarTitleLabelTopConstraint;
@@ -53,15 +55,18 @@
     __weak IBOutlet NSLayoutConstraint *_searchbarCancelButtonConstraint;
     __weak IBOutlet NSLayoutConstraint *_cancelButtonContainerViewLeadingConstraint;
     
-    __weak IBOutlet UITableView *_searchResultsTableView;
-    
-    NSArray *_cityArray;
-    
     __weak IBOutlet NSLayoutConstraint *_humidityTrailingConstraint;
     __weak IBOutlet NSLayoutConstraint *_windSpeedTrailingConstraint;
     __weak IBOutlet NSLayoutConstraint *_windSpeedLeadingConstraint;
     __weak IBOutlet NSLayoutConstraint *_pressureLeadingConstraint;
-    BOOL _searchModeAnimationStared;
+    
+    __weak IBOutlet UITableView *_searchResultsTableView;
+    
+    NSArray *_cityArray;
+    
+    BOOL _searchModeAnimationStarted;
+    
+    NSManagedObjectContext *_mainObjectContext;
     
     ForecastDataSource *_forecastDS;
     
@@ -75,6 +80,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    _mainObjectContext = [DataManager mainManagedObjectContext];
+    
+    _currentCity = [[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject];
+    
     [self layoutGUI];
 }
 
@@ -89,6 +99,29 @@
     [super viewDidLoad];
     
     mainScreenWidth = [UIScreen mainScreen].bounds.size.width;
+    
+    
+    __weak typeof(self)weakSelf = self;
+    
+    [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status){
+        
+        if (status == AFNetworkReachabilityStatusReachableViaWWAN || status == AFNetworkReachabilityStatusReachableViaWiFi)
+            
+            [LoadingView showLoadingViewInView:weakSelf.view WithCompletionBlock:^{
+                
+                [weakSelf loadData];
+                
+            }];
+        else
+        {
+            if (![self presentedViewController])
+            {
+                
+                [weakSelf resetSearchTextField:YES andHideKeyBoard:YES andDisableSearch:YES];
+                //[CommonAlertView showCommonAlertViewOnController:weakSelf withTitle:@"Error" andMessage:@"No internet connection, please check Your internet settings."];
+            }
+        }
+    }];
     
     [self addObservers];
     
@@ -117,6 +150,9 @@
     [WAStyle applyStyle:@"Temperature_Label_Small" toLabel:_windLabel];
     [WAStyle applyStyle:@"Temperature_Label_Small" toLabel:_humidityLabel];
     [WAStyle applyStyle:@"Temperature_Label_Small" toLabel:_presureLabel];
+    
+    [_cityLabel setAdjustsFontSizeToFitWidth:YES];
+
     
     [_searchResultsTableView setSeparatorColor:[UIColor clearColor]];
     
@@ -228,29 +264,28 @@
 
 - (void)loadData
 {
-    _currentCity = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
+    _currentCity = [[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject];
+    
     _currentWeather = ConfigManager.userWeather;
     
     if (!_currentCity)
-        [self loadCurretCityData];
+        [self loadDefaultCityData];
     else
-        [self bindGUI];
+        [self loadWeather];
 }
 
 
 
-- (void)loadCurretCityData
+- (void)loadDefaultCityData
 {
-    
     __weak typeof(self)weakSelf = self;
     
-    if (!_currentCity)
-        [_forecastDS getCityWithcompletionBlock:^(BOOL isDone, NSError *err, NSArray *arr) {
+    [_forecastDS getDefaultCityWithcompletionBlock:^(BOOL isDone, NSError *err, NSArray *arr) {
             
-            _currentCity = [arr firstObject];
-            [weakSelf loadWeather];
+        _currentCity = [arr firstObject];
+        [weakSelf loadWeather];
             
-        }];
+    }];
 }
 
 - (void)loadWeather
@@ -263,6 +298,17 @@
         
         if (success && !err)
             _currentWeather = [arr firstObject];
+        else
+            _currentWeather = nil;
+        
+        if (err && err.code == -1009)
+        {
+            if (![self presentedViewController])
+            {
+                [weakSelf resetSearchTextField:YES andHideKeyBoard:YES andDisableSearch:YES];
+                //[CommonAlertView showCommonAlertViewOnController:weakSelf withTitle:@"Error" andMessage:err.localizedDescription];
+            }
+        }
         
         [LoadingView hideLoadingViewForView:weakSelf.view WithCompletionBlock:^{
             
@@ -292,6 +338,8 @@
     _lowestTeperatureLabel.text = [NSString temperatureString:[self singleDecimalStringFromNumber:_currentWeather.minTemperature]];
     _highestTemperatureLabel.text = [NSString temperatureString:[self singleDecimalStringFromNumber:_currentWeather.maxTemperature]];
     
+    [_cityLabel setAdjustsFontSizeToFitWidth:YES];
+
     [self layoutGUI];
     
 }
@@ -324,9 +372,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if (!textField.text.length)
-        [textField resignFirstResponder];
-    else
+    if (textField.text.length)
     {
         __weak typeof(self)weakSelf = self;
         
@@ -342,11 +388,13 @@
                 }
                 else
                 {
-                    // add eror handling
+                    _cityArray = nil;
                 }
                 
                 [_searchResultsTableView reloadData];
-                [textField resignFirstResponder];
+                
+                if ([arr count])
+                    [textField resignFirstResponder];
                 
             }];
         }];
@@ -363,7 +411,7 @@
     if (!enabled)
         [self animateCancelButton:enabled];
     
-    _searchModeAnimationStared = YES;
+    _searchModeAnimationStarted = YES;
     _searchContainerView.backgroundColor = [_currentWeather.backgroudColor darkenByPercentage:0.5];
     _searchResultsTableView.backgroundColor = [[_currentWeather.backgroudColor lightenByPercentage:0.5] colorWithAlphaComponent:0.7];
     
@@ -392,7 +440,7 @@
         
     } completion:^(BOOL finished) {
         
-        _searchModeAnimationStared = NO;
+        _searchModeAnimationStarted = NO;
         
         if (enabled)
             [self animateCancelButton:enabled];
@@ -403,13 +451,13 @@
 
 - (void)animateCancelButton:(BOOL)show
 {
-    _cancelButtonContainerViewLeadingConstraint.constant = show ? - _cancelButtonContainerView.frame.size.width - 5 : 0;
+    _cancelButtonContainerViewLeadingConstraint.constant = show ? -_cancelButtonContainerView.frame.size.width : -5;
     
     __weak typeof(self)weakSelf = self;
     
     [UIView animateWithDuration:0.2 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         
-        _cancelButtonContainerViewLeadingConstraint.constant = show ? 0 : - _cancelButtonContainerView.frame.size.width - 5;
+        _cancelButtonContainerViewLeadingConstraint.constant = show ? -5 : - _cancelButtonContainerView.frame.size.width;
         
         [weakSelf.view setNeedsLayout];
         [weakSelf.view  layoutIfNeeded];
@@ -434,10 +482,12 @@
     
     settingsVC.shouldRefreshWeather = ^(){
         
-        if ([[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject])
-            _currentCity = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
+       // if ([[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject])
+            //_currentCity = [[[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"] firstObject];
         
-        [weakSelf loadWeather];
+        //[weakSelf loadWeather];
+        
+        [weakSelf loadData];
     };
     
     settingsVC.shouldUpdateConditionViews = ^(){
@@ -472,7 +522,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (!_searchModeAnimationStared)
+    if (!_searchModeAnimationStarted)
         [self resetSearchTextField:[_cityArray count] == 0 andHideKeyBoard:YES andDisableSearch:[_cityArray count] == 0];
 }
 
@@ -499,9 +549,9 @@
 - (void)saveSelectedCity:(City *)selectedCity
 {
     NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass([CityEntity class])
-                                              inManagedObjectContext:[[CoreDataManager sharedManager] mainManagedObjectContext]];
+                                              inManagedObjectContext:_mainObjectContext];
     
-    CityEntity *item = [[CityEntity alloc] initWithEntity:entity insertIntoManagedObjectContext:[[CoreDataManager sharedManager] mainManagedObjectContext]];
+    CityEntity *item = [[CityEntity alloc] initWithEntity:entity insertIntoManagedObjectContext:_mainObjectContext];
     
     item.name = selectedCity.name;
     item.countryCode = selectedCity.countryCode;
@@ -510,7 +560,7 @@
     item.longitude = selectedCity.longitude;
     item.isSelected = YES;
     
-    [[[CoreDataManager sharedManager] mainManagedObjectContext] save:nil];
+    [DataManager setMainCitySelectAndDeselctOther:item];
     
 }
 

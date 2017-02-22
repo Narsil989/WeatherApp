@@ -38,8 +38,8 @@
 {
     if (_city)
     {
-        _letterLabel.text = [_city.name substringWithRange:NSMakeRange(0, 1)];
-        _titleLabel.text = [NSString stringWithFormat:@"%@, %@", _city.name, _city.countryCode];
+        _letterLabel.text = [[_city.name substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"'"] ? [_city.name substringWithRange:NSMakeRange(0, 2)] : [_city.name substringWithRange:NSMakeRange(0, 1)];
+        _titleLabel.text = _city.countryCode ? [NSString stringWithFormat:@"%@, %@", _city.name, _city.countryCode] : _city.name;
         _letterLabel.backgroundColor = _borderView.backgroundColor = [UIColor randomFlatColor];
     }
 }

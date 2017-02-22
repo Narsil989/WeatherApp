@@ -144,6 +144,21 @@
     }
 }
 
+- (void)setMainCitySelectAndDeselctOther:(CityEntity *)mainCity
+{
+    NSArray *allCities = [self citiesForSearchQuery:@""];
+    
+    for (CityEntity *item in allCities)
+    {
+        if (item.geonameId != mainCity.geonameId)
+            [item setValue:@NO forKey:@"isSelected"];
+        else
+            [item setValue:@YES forKey:@"isSelected"];
+    }
+    
+    [_mainManagedObjectContext save:nil];
+}
+
 - (NSArray *)citiesForSearchQuery:(NSString *)query
 {
     NSManagedObjectContext* moc = [self mainManagedObjectContext];

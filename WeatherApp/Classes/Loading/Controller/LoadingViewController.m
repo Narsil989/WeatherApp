@@ -16,130 +16,152 @@
 
 @implementation LoadingViewController
 {
+    __weak IBOutlet UILabel *_noInternetLabel;
     ForecastDataSource *_forecastDS;
     CityEntity *_currentCity;
     NSDictionary *_userCityDataDict;
     NSManagedObjectContext *_mainManagedObjectContext;
-    __weak IBOutlet UIButton *_refreshButton;
-    
     BOOL alertShown;
     BOOL dataIsLoading;
+    BOOL waitingForUserLocation;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    _mainManagedObjectContext = [[CoreDataManager sharedManager] mainManagedObjectContext];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAlertViewController:) name:@"UserLocationUpdated" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startingData) name:@"UserDeclinedLocation" object:nil];
-   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAlertViewController:) name:@"UserAcceptedLocation" object:nil];
-
-    _refreshButton.hidden = [[AFNetworkReachabilityManager sharedManager] isReachable];
+    waitingForUserLocation = YES;
+    
+    _mainManagedObjectContext = [DataManager mainManagedObjectContext];
+    
+    _noInternetLabel.text = @"No internet connection, please check Your internet settings.";
+    [WAStyle applyStyle:@"Settings_Title_Label" toLabel:_noInternetLabel];
+    
     ConfigManager;
+    
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"AppWasAlreadyUsed"])
+    {
         [self createFirstTimeRunData];
+    }
     
     if (!_forecastDS) _forecastDS = [ForecastDataSource new];
     [_forecastDS setMaxRows:@"10"];
     [_forecastDS setUsername:@"narsil"];
     [_forecastDS setDarkSkyToken:@"c445625667ffb6939409211d3255ff87"];
-}
-
-- (void)startingData
-{
-
-        [self loadLocalData];
-}
-
-- (void)loadUserData
-{
-    if (!dataIsLoading)
-        dataIsLoading = YES;
-    else
-        return;
     
-    __weak typeof(self)weakSelf = self;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userAcceptedUsingLocation) name:@"UserAcceptedLocation" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDeclinedUsingLocation) name:@"UserDeclinedLocation" object:nil];
     
-    [LoadingView showLoadingViewInView:self.view WithCompletionBlock:^{
+    [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status){
         
-        //[weakSelf loadCurretCityData];
-        
+        if (status == AFNetworkReachabilityStatusReachableViaWWAN || status == AFNetworkReachabilityStatusReachableViaWiFi)
+        {
+            _noInternetLabel.hidden = YES;
+            [ConfigManager.locationManager startUpdatingLocation];
+        }
+        else
+        {
+            _noInternetLabel.hidden = NO;
+        }
     }];
+}
+
+- (void)userAcceptedUsingLocation
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLocationUpdated:) name:@"UserLocationUpdated" object:nil];
+}
+
+- (void)userDeclinedUsingLocation
+{
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"UserAlreadyAcceptedUsingLocation"];
+    [self loadLocalData];
+}
+
+- (void)userLocationUpdated:(NSNotification *)notif
+{
+    if ([notif.userInfo allKeys])
+    {
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:@"UserAlreadyAcceptedUsingLocation"])
+        {
+            if (!alertShown)
+                [self showAlertViewController:notif];
+        }
+        else
+        {
+            
+            
+            [self loadCurretCityData:notif.userInfo];
+        }
+    }
 }
 
 - (void)loadLocalData
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"AppWasAlreadyUsed"])
-        [self createFirstTimeRunData];
+    NSArray *citiesArray = [DataManager citiesForSearchQuery:@"isSelected == YES"];
     
-    NSArray *citiesArray = [[CoreDataManager sharedManager] citiesForSearchQuery:@"isSelected == YES"];
-    
-    if ([citiesArray count] == 0 && [[CoreDataManager sharedManager] citiesForSearchQuery:@""])
+    if ([citiesArray count] == 0 && [DataManager citiesForSearchQuery:@""])
     {
-        CityEntity *tmpCity = [[[CoreDataManager sharedManager] citiesForSearchQuery:@""] firstObject];
+        CityEntity *tmpCity = [[DataManager citiesForSearchQuery:@""] firstObject];
         [tmpCity setValue:@YES forKey:@"isSelected"];
+        _currentCity = tmpCity;
     }
+    else
+        _currentCity = [citiesArray firstObject];
+    
+    __weak typeof(self)weakSelf = self;
+    
+    __weak typeof(_forecastDS)wForecastDS = _forecastDS;
+    
+    [LoadingView showLoadingViewInView:self.view WithCompletionBlock:^{
+        
+        if (!_currentCity)
+        {
+            [wForecastDS getDefaultCityWithcompletionBlock:^(BOOL done, NSError *err, NSArray *arr) {
+                
+                _currentCity = [arr firstObject];
+                [weakSelf loadWeather];
+                
+            }];
+        }
+        else
+            [weakSelf loadWeather];
+        
+    }];
+    
 }
 
 - (void)loadCurretCityData:(NSDictionary *)cityData
 {
     __weak typeof(self)weakSelf = self;
-    
-    [_forecastDS getUserCityWithData:cityData andCompletionBlock:^(BOOL success, NSError *err, NSArray *itemsArray) {
+    __weak typeof(_forecastDS)wForecastDS = _forecastDS;
+    [LoadingView showLoadingViewInView:self.view WithCompletionBlock:^{
         
-        if (!err && success)
-        {
-            _currentCity = [itemsArray firstObject];
-            [weakSelf selectUserCityAndDeselctOthers];
-            [weakSelf loadWeather];
-        }
-        else
-        {
-            [LoadingView hideLoadingViewForView:self.view WithCompletionBlock:^{
-               
-                if (weakSelf.loadDataFinished)
-                    weakSelf.loadDataFinished();
-                
-            }];
-        }
-        
+        [wForecastDS getUserCityWithData:cityData andCompletionBlock:^(BOOL success, NSError *err, NSArray *itemsArray) {
+            
+            if (!err && success)
+            {
+                _currentCity = [itemsArray firstObject];
+                [weakSelf selectUserCityAndDeselctOthers];
+                [weakSelf loadWeather];
+            }
+            else
+            {
+                [LoadingView hideLoadingViewForView:self.view WithCompletionBlock:^{
+                    
+                    if (weakSelf.loadDataFinished)
+                        weakSelf.loadDataFinished();
+                    
+                }];
+            }
+            
+        }];
     }];
-    
-    /*[_forecastDS getUserCityWithcompletionBlock:^(BOOL isDone, NSError *err, NSArray *arr)
-     {
-        _currentCity = [arr firstObject];
-        [weakSelf loadWeather];
-        
-    }];*/
 }
 
 - (void)selectUserCityAndDeselctOthers
 {
-    for (CityEntity *entity in [[CoreDataManager sharedManager] citiesForSearchQuery:@""])
-    {
-        [entity setValue:@NO forKey:@"isSelected"];
-    }
-    
-    [_currentCity setValue:@YES forKey:@"isSelected"];
+    [DataManager setMainCitySelectAndDeselctOther:_currentCity];
 }
-
-/*- (void)addUserCityToLocalDataAndLoadWeather:(City *)city
-{
-    NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass([CityEntity class])
-                                              inManagedObjectContext:[[CoreDataManager sharedManager] mainManagedObjectContext]];
-    
-    CityEntity *userCity = [[CityEntity alloc] initWithEntity:entity insertIntoManagedObjectContext:[[CoreDataManager sharedManager] mainManagedObjectContext]];
-    //add osijek
-    userCity.name = city.name;
-    userCity.countryCode = city.countryCode;
-    userCity.geonameId = [city.geonameId floatValue];
-    userCity.isSelected = YES;
-    userCity.longitude = city.longitude;
-    userCity.latitude = city.latitude;
-    
-    [[CoreDataManager sharedManager].mainManagedObjectContext save:nil];
-}*/
 
 - (void)loadWeather
 {
@@ -152,8 +174,8 @@
         
         [LoadingView hideLoadingViewForView:weakSelf.view WithCompletionBlock:^{
             
-        if (strongSelf.loadDataFinished)
-            strongSelf.loadDataFinished();
+            if (strongSelf.loadDataFinished)
+                strongSelf.loadDataFinished();
             
         }];
         
@@ -203,7 +225,8 @@
 - (void)showAlertViewController:(NSNotification *)notif
 {
     NSDictionary *dict =  notif.userInfo;
-    if (alertShown || ![dict allKeys]) return;
+    if (alertShown || ![dict allKeys])
+        return;
     
     _userCityDataDict = dict;
     
@@ -215,11 +238,8 @@
     
     UIAlertAction *acceptanceAction = [UIAlertAction actionWithTitle:@"YES!" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
-        [LoadingView showLoadingViewInView:self.view WithCompletionBlock:^{
-            
-            [weakSelf loadCurretCityData:_userCityDataDict];
-        }];
-        
+        [weakSelf loadCurretCityData:_userCityDataDict];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"UserAlreadyAcceptedUsingLocation"];
         alertShown = NO;
         
     }];
@@ -227,17 +247,13 @@
     UIAlertAction *declineAction = [UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         
         alertShown = NO;
+        [weakSelf loadLocalData];
     }];
     
     [chooseAlert addAction:acceptanceAction];
     [chooseAlert addAction:declineAction];
     
     [self presentViewController:chooseAlert animated:YES completion:nil];
-}
-
-- (IBAction)refreshButtonTapped:(id)sender
-{
-    [self loadCurretCityData:_userCityDataDict];
 }
 
 - (void)didReceiveMemoryWarning

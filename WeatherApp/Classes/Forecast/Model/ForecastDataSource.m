@@ -66,7 +66,7 @@ static NSString* _darkskyToken;
     return urlString;
 }
 
-- (void)getCityWithcompletionBlock:(void (^)(BOOL, NSError *, NSArray *))completionBlock
+- (void)getDefaultCityWithcompletionBlock:(void (^)(BOOL, NSError *, NSArray *))completionBlock
 {
     [AbstractDataSource setBaseUrl:[self getSearchUrl]];
     
@@ -75,7 +75,7 @@ static NSString* _darkskyToken;
     [_geonameDS getDataWithParameters:@{@"q" : @"Osijek",
                                         @"maxRows" : _maxRows.length ? _maxRows : @"10",
                                         @"username": @"narsil"}
-                          parserClass:[CityParser class] andCompletionBlock:^(BOOL success, NSError *error, NSArray *dataArray) {
+                          parserClass:[CityEntityParser class] andCompletionBlock:^(BOOL success, NSError *error, NSArray *dataArray) {
        
         if (completionBlock)
             completionBlock(success, error, dataArray);

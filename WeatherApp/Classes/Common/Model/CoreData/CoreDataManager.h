@@ -25,4 +25,5 @@
 
 - (NSURL *)applicationDocumentsDirectory;
 
+- (void)setMainCitySelectAndDeselctOther:(CityEntity *)mainCity;
 @end
