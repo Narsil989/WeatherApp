@@ -241,6 +241,7 @@
 {
     [self.mainTimer invalidate];
     self.mainTimer = nil;
+    [self removeFromSuperview];
 }
 
 @end

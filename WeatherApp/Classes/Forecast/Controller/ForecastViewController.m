@@ -84,7 +84,7 @@
 {
     [super viewWillAppear:animated];
     
-    _mainObjectContext = [DataManager mainManagedObjectContext];
+    if (!_mainObjectContext) _mainObjectContext = [DataManager mainManagedObjectContext];
     
     if (!_currentWeather)
     {
@@ -96,9 +96,10 @@
     if (_dataIsLoading)
         [LoadingView showLoadingViewInView:self.view];
     
-    _currentCity = [[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject];
+    if ([[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject])
+        _currentCity = [[DataManager citiesForSearchQuery:@"isSelected == YES"] firstObject];
     
-    [self layoutGUI];
+    [self bindGUI];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -113,12 +114,9 @@
     [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status){
         
         if (status == AFNetworkReachabilityStatusReachableViaWWAN || status == AFNetworkReachabilityStatusReachableViaWiFi)
-            
             [weakSelf loadData];
         else
-        {
             _noInternetLabel.hidden = NO;
-        }
     }];
     
 }
@@ -233,7 +231,6 @@
     _searchTextField.rightViewMode = UITextFieldViewModeAlways;
     
     [self addSearchIconToTextField];
-
     [self addClearButtonToTextField];
 }
 
@@ -241,6 +238,9 @@
 {
     UIImageView *searchIconImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"SearchIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     searchIconImageView.tintColor = _currentWeather.backgroudColor ? _currentWeather.backgroudColor : [UIColor flatSkyBlueColor];
+    
+    _cancelButton.imageView.image = [[UIImage imageNamed:@"CloseIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    _cancelButton.tintColor =_currentWeather.backgroudColor ? _currentWeather.backgroudColor : [UIColor flatSkyBlueColor];
     searchIconImageView.frame = CGRectMake(10, 0, searchIconImageView.frame.size.width, searchIconImageView.frame.size.height);
     
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, searchIconImageView.frame.size.width * 2, searchIconImageView.frame.size.height)];
@@ -532,6 +532,8 @@
 }
 - (IBAction)settingsButtonTapped:(id)sender
 {
+    [self resetSearchTextField:YES andHideKeyBoard:YES andDisableSearch:YES];
+    
     SettingsViewController *settingsVC = [SettingsViewController new];
     
     __weak typeof(self)weakSelf = self;
@@ -599,19 +601,27 @@
 
 - (void)saveSelectedCity:(City *)selectedCity
 {
-    NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass([CityEntity class])
+    
+    NSArray *tempArray = [DataManager citiesForSearchQuery:[NSString stringWithFormat:@"geonameId == %@", selectedCity.geonameId]];
+    
+    if ([tempArray count] == 0)
+    {
+        NSEntityDescription *entity = [NSEntityDescription entityForName:NSStringFromClass([CityEntity class])
                                               inManagedObjectContext:_mainObjectContext];
     
-    CityEntity *item = [[CityEntity alloc] initWithEntity:entity insertIntoManagedObjectContext:_mainObjectContext];
+        CityEntity *item = [[CityEntity alloc] initWithEntity:entity insertIntoManagedObjectContext:_mainObjectContext];
     
-    item.name = selectedCity.name;
-    item.countryCode = selectedCity.countryCode;
-    item.geonameId = [selectedCity.geonameId floatValue];
-    item.latitude = selectedCity.latitude;
-    item.longitude = selectedCity.longitude;
-    item.isSelected = YES;
-    
-    [DataManager setMainCitySelectAndDeselctOther:item];
+        item.name = selectedCity.name;
+        item.countryCode = selectedCity.countryCode;
+        item.geonameId = [selectedCity.geonameId floatValue];
+        item.latitude = selectedCity.latitude;
+        item.longitude = selectedCity.longitude;
+        item.isSelected = YES;
+        
+        [DataManager setMainCitySelectAndDeselctOther:item];
+    }
+    else
+        [DataManager setMainCitySelectAndDeselctOther:[tempArray firstObject]];
     
 }
 
@@ -699,7 +709,9 @@
 
 - (NSString *)singleDecimalStringFromNumber:(NSNumber *)number
 {
-    return [NSString stringWithFormat:@"%.1f", [number floatValue]];
+    NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
+    [fmt setPositiveFormat:@"0.#"];
+    return [fmt stringFromNumber:[NSNumber numberWithFloat:[number floatValue]]];
 }
 
 

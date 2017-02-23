@@ -10,6 +10,12 @@
 		16E6C4116777FF10FF077E7D /* libPods-WeatherApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D03173860288D57EBC5DDAE1 /* libPods-WeatherApp.a */; };
 		5F1B12041E59EADD00D5485E /* Configuration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5F1B12031E59EADD00D5485E /* Configuration.plist */; };
 		5F1B120A1E5A3E8000D5485E /* CityEntityParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F1B12091E5A3E8000D5485E /* CityEntityParser.m */; };
+		5F35315C1E5E34AE00F3D881 /* CloseIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F3531591E5E34AE00F3D881 /* CloseIcon@3x.png */; };
+		5F35315D1E5E34AE00F3D881 /* CloseIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F35315A1E5E34AE00F3D881 /* CloseIcon@2x.png */; };
+		5F35315E1E5E34AE00F3D881 /* CloseIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F35315B1E5E34AE00F3D881 /* CloseIcon.png */; };
+		5F8B224A1E5F8306000D4148 /* LaunchScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F8B22471E5F8306000D4148 /* LaunchScreen.png */; };
+		5F8B224B1E5F8306000D4148 /* LaunchScreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F8B22481E5F8306000D4148 /* LaunchScreen@2x.png */; };
+		5F8B224C1E5F8306000D4148 /* LaunchScreen@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F8B22491E5F8306000D4148 /* LaunchScreen@3x.png */; };
 		5F934F991E54FCFF002A4E29 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F934F981E54FCFF002A4E29 /* main.m */; };
 		5F934FA41E54FCFF002A4E29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F934FA31E54FCFF002A4E29 /* Assets.xcassets */; };
 		5F934FA71E54FCFF002A4E29 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F934FA51E54FCFF002A4E29 /* LaunchScreen.storyboard */; };
@@ -125,7 +131,13 @@
 		5F1B12031E59EADD00D5485E /* Configuration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Configuration.plist; sourceTree = "<group>"; };
 		5F1B12081E5A3E8000D5485E /* CityEntityParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityEntityParser.h; sourceTree = "<group>"; };
 		5F1B12091E5A3E8000D5485E /* CityEntityParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityEntityParser.m; sourceTree = "<group>"; };
+		5F3531591E5E34AE00F3D881 /* CloseIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CloseIcon@3x.png"; sourceTree = "<group>"; };
+		5F35315A1E5E34AE00F3D881 /* CloseIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CloseIcon@2x.png"; sourceTree = "<group>"; };
+		5F35315B1E5E34AE00F3D881 /* CloseIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseIcon.png; sourceTree = "<group>"; };
 		5F4B527F1E57339D007411D7 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PrefixHeader.pch; path = ../../../PrefixHeader.pch; sourceTree = "<group>"; };
+		5F8B22471E5F8306000D4148 /* LaunchScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LaunchScreen.png; sourceTree = "<group>"; };
+		5F8B22481E5F8306000D4148 /* LaunchScreen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LaunchScreen@2x.png"; sourceTree = "<group>"; };
+		5F8B22491E5F8306000D4148 /* LaunchScreen@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LaunchScreen@3x.png"; sourceTree = "<group>"; };
 		5F934F941E54FCFF002A4E29 /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F934F981E54FCFF002A4E29 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5F934FA31E54FCFF002A4E29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -295,6 +307,16 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		5F8B22461E5F8306000D4148 /* Splash */ = {
+			isa = PBXGroup;
+			children = (
+				5F8B22471E5F8306000D4148 /* LaunchScreen.png */,
+				5F8B22481E5F8306000D4148 /* LaunchScreen@2x.png */,
+				5F8B22491E5F8306000D4148 /* LaunchScreen@3x.png */,
+			);
+			path = Splash;
+			sourceTree = "<group>";
+		};
 		5F934F8B1E54FCFF002A4E29 = {
 			isa = PBXGroup;
 			children = (
@@ -462,6 +484,7 @@
 		5F934FCC1E54FD3B002A4E29 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5F8B22461E5F8306000D4148 /* Splash */,
 				5F934FCD1E54FD3B002A4E29 /* beer.png */,
 				5F934FCE1E54FD3B002A4E29 /* Fonts */,
 				5F934FD01E54FD3B002A4E29 /* Icons */,
@@ -481,6 +504,9 @@
 		5F934FD01E54FD3B002A4E29 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				5F3531591E5E34AE00F3D881 /* CloseIcon@3x.png */,
+				5F35315A1E5E34AE00F3D881 /* CloseIcon@2x.png */,
+				5F35315B1E5E34AE00F3D881 /* CloseIcon.png */,
 				5F934FD11E54FD3B002A4E29 /* CheckMark.png */,
 				5F934FD21E54FD3B002A4E29 /* CheckMark@2x.png */,
 				5F934FD31E54FD3B002A4E29 /* CheckMark@3x.png */,
@@ -752,9 +778,11 @@
 				5FA91B3E1E57AE40008B12DF /* SettingsConditionsCell.xib in Resources */,
 				5F9350441E54FD3B002A4E29 /* fog.png in Resources */,
 				5F93502D1E54FD3B002A4E29 /* ImperialIcon@2x.png in Resources */,
+				5F35315E1E5E34AE00F3D881 /* CloseIcon.png in Resources */,
 				5FBFF9B81E56416500BC913E /* Style_Fonts.plist in Resources */,
 				5F9350521E54FD3B002A4E29 /* rain@3x.png in Resources */,
 				5F9350231E54FD3B002A4E29 /* CheckMarkUnchecked.png in Resources */,
+				5F35315D1E5E34AE00F3D881 /* CloseIcon@2x.png in Resources */,
 				5F9350281E54FD3B002A4E29 /* ClearIcon@3x.png in Resources */,
 				5F93505C1E54FD3B002A4E29 /* wind.png in Resources */,
 				5F9350221E54FD3B002A4E29 /* CheckMark@3x.png in Resources */,
@@ -766,6 +794,7 @@
 				5F93501E1E54FD3B002A4E29 /* beer.png in Resources */,
 				5F9350271E54FD3B002A4E29 /* ClearIcon@2x.png in Resources */,
 				5F9350261E54FD3B002A4E29 /* ClearIcon.png in Resources */,
+				5F35315C1E5E34AE00F3D881 /* CloseIcon@3x.png in Resources */,
 				5F9350241E54FD3B002A4E29 /* CheckMarkUnchecked@2x.png in Resources */,
 				5F9350611E54FD3B002A4E29 /* WindIcon@3x.png in Resources */,
 				5F93504C1E54FD3B002A4E29 /* partly-cloudy-day@3x.png in Resources */,
@@ -781,6 +810,7 @@
 				5FA91B241E57625E008B12DF /* CityCell.xib in Resources */,
 				5F9350201E54FD3B002A4E29 /* CheckMark.png in Resources */,
 				5F9350401E54FD3B002A4E29 /* clear-night@3x.png in Resources */,
+				5F8B224B1E5F8306000D4148 /* LaunchScreen@2x.png in Resources */,
 				5F9350541E54FD3B002A4E29 /* sleet@2x.png in Resources */,
 				5F9350211E54FD3B002A4E29 /* CheckMark@2x.png in Resources */,
 				5FA91B341E57A914008B12DF /* SettingsTableViewHeader.xib in Resources */,
@@ -795,6 +825,7 @@
 				5F93502F1E54FD3B002A4E29 /* MetricIcon.png in Resources */,
 				5F93502C1E54FD3B002A4E29 /* ImperialIcon.png in Resources */,
 				5F93503E1E54FD3B002A4E29 /* clear-night.png in Resources */,
+				5F8B224C1E5F8306000D4148 /* LaunchScreen@3x.png in Resources */,
 				5F93504D1E54FD3B002A4E29 /* partly-cloudy-night.png in Resources */,
 				5F9350551E54FD3B002A4E29 /* sleet@3x.png in Resources */,
 				5FA91B391E57AE13008B12DF /* SettingsCityCell.xib in Resources */,
@@ -817,6 +848,7 @@
 				5F9350491E54FD3B002A4E29 /* hail@3x.png in Resources */,
 				5F9350601E54FD3B002A4E29 /* WindIcon@2x.png in Resources */,
 				5F9350251E54FD3B002A4E29 /* CheckMarkUnchecked@3x.png in Resources */,
+				5F8B224A1E5F8306000D4148 /* LaunchScreen.png in Resources */,
 				5F9350331E54FD3B002A4E29 /* PresureIcon@2x.png in Resources */,
 				5F93501D1E54FD3B002A4E29 /* SettingsViewController.xib in Resources */,
 				5F9350511E54FD3B002A4E29 /* rain@2x.png in Resources */,
@@ -1028,6 +1060,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: NTH AG";
 				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = /Users/testaccount/WeatherApp/WeatherApp/PrefixHeader.pch;
 				INFOPLIST_FILE = WeatherApp/Info.plist;
@@ -1047,6 +1080,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: NTH AG";
 				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = /Users/testaccount/WeatherApp/WeatherApp/PrefixHeader.pch;
 				INFOPLIST_FILE = WeatherApp/Info.plist;

@@ -15,8 +15,6 @@
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) CLLocation *currentUserLocation;
-//@property (nonatomic, strong) City *userCity;
-//@property (nonatomic, strong) Weather *userWeather;
 @property (nonatomic, strong) NSMutableDictionary *settingsDict;
 
 - (void)saveChangesOnConfigurationDict;

@@ -27,11 +27,11 @@
 {
     NSString *unitKey;
     if ([[ConfigManager.settingsDict valueForKey:unit_si_key] boolValue])
-        unitKey = @"km/h";
+        unitKey = @" km/h";
     else if([[ConfigManager.settingsDict valueForKey:unit_us_key] boolValue])
-        unitKey = @"mph";
+        unitKey = @" mph";
     else
-        unitKey = @"km/h";
+        unitKey = @" km/h";
     return [NSString stringWithFormat:@"%@%@", value, unitKey];
     
 }

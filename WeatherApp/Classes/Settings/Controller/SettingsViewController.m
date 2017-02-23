@@ -170,7 +170,7 @@
     
     [self loadData];
     
-    if ([_dataArray count] != 0)
+    //if ([_dataArray count] != 0)
     if (_shouldRefreshWeather)
         _shouldRefreshWeather();
     

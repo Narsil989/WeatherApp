@@ -70,11 +70,11 @@
                     <rect key="frame" x="-5" y="35" width="50" height="30"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R3j-1Q-aIj">
-                            <rect key="frame" x="15" y="0.0" width="35" height="30"/>
+                            <rect key="frame" x="22" y="5" width="20" height="20"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="30" id="kxx-4K-GIO"/>
+                                <constraint firstAttribute="height" constant="20" id="kxx-4K-GIO"/>
                             </constraints>
-                            <state key="normal" image="ClearIcon.png"/>
+                            <state key="normal" image="CloseIcon.png"/>
                             <connections>
                                 <action selector="clearButtonTapped:" destination="-1" eventType="touchUpInside" id="eUm-0M-cbt"/>
                             </connections>
@@ -82,10 +82,10 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="R3j-1Q-aIj" secondAttribute="bottom" id="Bge-4l-mJg"/>
-                        <constraint firstAttribute="trailing" secondItem="R3j-1Q-aIj" secondAttribute="trailing" id="GtK-1H-eR7"/>
+                        <constraint firstAttribute="bottom" secondItem="R3j-1Q-aIj" secondAttribute="bottom" constant="5" id="Bge-4l-mJg"/>
+                        <constraint firstAttribute="trailing" secondItem="R3j-1Q-aIj" secondAttribute="trailing" constant="8" id="GtK-1H-eR7"/>
                         <constraint firstAttribute="width" constant="50" id="IrE-G6-Mt3"/>
-                        <constraint firstItem="R3j-1Q-aIj" firstAttribute="leading" secondItem="an5-Dj-YBy" secondAttribute="leading" constant="15" id="hot-f9-72Q"/>
+                        <constraint firstItem="R3j-1Q-aIj" firstAttribute="leading" secondItem="an5-Dj-YBy" secondAttribute="leading" constant="22" id="hot-f9-72Q"/>
                         <constraint firstAttribute="height" constant="30" id="sOH-5M-VNW"/>
                     </constraints>
                 </view>
@@ -333,7 +333,7 @@
         </view>
     </objects>
     <resources>
-        <image name="ClearIcon.png" width="15" height="15"/>
+        <image name="CloseIcon.png" width="35" height="35"/>
         <image name="HumidityIcon.png" width="37" height="50"/>
         <image name="PresureIcon.png" width="44" height="50"/>
         <image name="WindIcon.png" width="50" height="39"/>

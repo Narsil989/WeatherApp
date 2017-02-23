@@ -19,8 +19,14 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreen.png" translatesAutoresizingMaskIntoConstraints="NO" id="IW8-pd-kBo">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pnQ-nf-HXm">
-                    <rect key="frame" x="10" y="0.0" width="355" height="667"/>
+                    <rect key="frame" x="10" y="289" width="355" height="88"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="999" constant="88" id="yAo-UZ-dm7"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -28,12 +34,18 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="pnQ-nf-HXm" secondAttribute="trailing" constant="10" id="1A1-Gs-oXG"/>
-                <constraint firstItem="pnQ-nf-HXm" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="2VQ-vf-Vqn"/>
-                <constraint firstAttribute="bottom" secondItem="pnQ-nf-HXm" secondAttribute="bottom" id="Mct-S2-26m"/>
-                <constraint firstItem="pnQ-nf-HXm" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hBq-Hb-sb6"/>
+                <constraint firstAttribute="trailing" secondItem="pnQ-nf-HXm" secondAttribute="trailing" constant="10" id="11h-jb-pft"/>
+                <constraint firstItem="IW8-pd-kBo" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="60C-zp-18h"/>
+                <constraint firstItem="IW8-pd-kBo" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Mia-Ox-CV7"/>
+                <constraint firstItem="pnQ-nf-HXm" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="R0a-2d-tRC"/>
+                <constraint firstItem="pnQ-nf-HXm" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="Wr4-qz-zgK"/>
+                <constraint firstAttribute="bottom" secondItem="IW8-pd-kBo" secondAttribute="bottom" id="sbk-ZO-uh8"/>
+                <constraint firstAttribute="trailing" secondItem="IW8-pd-kBo" secondAttribute="trailing" id="x9a-dX-7mC"/>
             </constraints>
             <point key="canvasLocation" x="34.5" y="54.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="LaunchScreen.png" width="375" height="667"/>
+    </resources>
 </document>
