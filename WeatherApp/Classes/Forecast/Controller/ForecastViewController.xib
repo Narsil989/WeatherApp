@@ -10,9 +10,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ForecastViewController">
             <connections>
-                <outlet property="_cancelButton" destination="R3j-1Q-aIj" id="9TU-DO-UTF"/>
+                <outlet property="_cancelButton" destination="dr5-xh-u0N" id="Hxg-kp-VDk"/>
                 <outlet property="_cancelButtonContainerView" destination="an5-Dj-YBy" id="pgC-jo-ko1"/>
                 <outlet property="_cancelButtonContainerViewLeadingConstraint" destination="5qu-J7-KYw" id="1rH-OT-EmY"/>
+                <outlet property="_cancelIcon" destination="c7l-nj-UbW" id="J69-Ji-qkQ"/>
                 <outlet property="_cityLabel" destination="x3W-c1-nWy" id="G1U-IY-8jm"/>
                 <outlet property="_highTemperatureStaticLabel" destination="oRX-oc-bLE" id="33o-tb-CNy"/>
                 <outlet property="_highestTemperatureLabel" destination="zfD-j6-zux" id="R3o-GM-YFc"/>
@@ -69,24 +70,28 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="an5-Dj-YBy">
                     <rect key="frame" x="-5" y="35" width="50" height="30"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R3j-1Q-aIj">
-                            <rect key="frame" x="22" y="5" width="20" height="20"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="20" id="kxx-4K-GIO"/>
-                            </constraints>
-                            <state key="normal" image="CloseIcon.png"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dr5-xh-u0N">
+                            <rect key="frame" x="0.0" y="0.0" width="50" height="30"/>
                             <connections>
-                                <action selector="clearButtonTapped:" destination="-1" eventType="touchUpInside" id="eUm-0M-cbt"/>
+                                <action selector="cancelButtonTapped:" destination="-1" eventType="touchUpInside" id="S2r-wG-aXD"/>
                             </connections>
                         </button>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CloseIcon.png" translatesAutoresizingMaskIntoConstraints="NO" id="c7l-nj-UbW">
+                            <rect key="frame" x="20" y="5" width="20" height="20"/>
+                        </imageView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="R3j-1Q-aIj" secondAttribute="bottom" constant="5" id="Bge-4l-mJg"/>
-                        <constraint firstAttribute="trailing" secondItem="R3j-1Q-aIj" secondAttribute="trailing" constant="8" id="GtK-1H-eR7"/>
+                        <constraint firstItem="dr5-xh-u0N" firstAttribute="leading" secondItem="an5-Dj-YBy" secondAttribute="leading" id="0uX-wH-TCW"/>
+                        <constraint firstItem="c7l-nj-UbW" firstAttribute="leading" secondItem="an5-Dj-YBy" secondAttribute="leading" constant="20" id="AKa-C0-veZ"/>
+                        <constraint firstAttribute="bottom" secondItem="dr5-xh-u0N" secondAttribute="bottom" id="BrQ-18-PlK"/>
+                        <constraint firstAttribute="trailing" secondItem="dr5-xh-u0N" secondAttribute="trailing" id="FDJ-lt-VT6"/>
+                        <constraint firstAttribute="trailing" secondItem="c7l-nj-UbW" secondAttribute="trailing" constant="10" id="GQf-d1-ZLB"/>
                         <constraint firstAttribute="width" constant="50" id="IrE-G6-Mt3"/>
-                        <constraint firstItem="R3j-1Q-aIj" firstAttribute="leading" secondItem="an5-Dj-YBy" secondAttribute="leading" constant="22" id="hot-f9-72Q"/>
+                        <constraint firstItem="dr5-xh-u0N" firstAttribute="top" secondItem="an5-Dj-YBy" secondAttribute="top" id="Pmz-wi-h5D"/>
+                        <constraint firstAttribute="bottom" secondItem="c7l-nj-UbW" secondAttribute="bottom" constant="5" id="aYV-xH-1Rq"/>
                         <constraint firstAttribute="height" constant="30" id="sOH-5M-VNW"/>
+                        <constraint firstItem="c7l-nj-UbW" firstAttribute="top" secondItem="an5-Dj-YBy" secondAttribute="top" constant="5" id="t36-1n-bQR"/>
                     </constraints>
                 </view>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JUg-Kg-ZAZ">
@@ -333,7 +338,7 @@
         </view>
     </objects>
     <resources>
-        <image name="CloseIcon.png" width="35" height="35"/>
+        <image name="CloseIcon.png" width="25" height="25"/>
         <image name="HumidityIcon.png" width="37" height="50"/>
         <image name="PresureIcon.png" width="44" height="50"/>
         <image name="WindIcon.png" width="50" height="39"/>

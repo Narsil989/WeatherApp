@@ -40,6 +40,7 @@
     __weak IBOutlet UILabel *_lowTeperatureStaticLabel;
     
     __weak IBOutlet UIButton *_cancelButton;
+    __weak IBOutlet UIImageView *_cancelIcon;
     
     __weak IBOutlet UILabel *_highTemperatureStaticLabel;
     __weak IBOutlet UILabel *_highestTemperatureLabel;
@@ -238,9 +239,6 @@
 {
     UIImageView *searchIconImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"SearchIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     searchIconImageView.tintColor = _currentWeather.backgroudColor ? _currentWeather.backgroudColor : [UIColor flatSkyBlueColor];
-    
-    _cancelButton.imageView.image = [[UIImage imageNamed:@"CloseIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    _cancelButton.tintColor =_currentWeather.backgroudColor ? _currentWeather.backgroudColor : [UIColor flatSkyBlueColor];
     searchIconImageView.frame = CGRectMake(10, 0, searchIconImageView.frame.size.width, searchIconImageView.frame.size.height);
     
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, searchIconImageView.frame.size.width * 2, searchIconImageView.frame.size.height)];
@@ -386,6 +384,10 @@
     {
         self.view.backgroundColor = _currentWeather.backgroudColor;
         [self addSearchIconToTextField];
+        
+        
+        _cancelIcon.image = [[UIImage imageNamed:@"CloseIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        _cancelIcon.tintColor =_currentWeather.backgroudColor ? _currentWeather.backgroudColor : [UIColor flatSkyBlueColor];
     }
 }
 
@@ -453,6 +455,8 @@
 - (void)setSearchModeEnabled:(BOOL)enabled
 {
     __weak typeof(self)weakSelf = self;
+    
+    [self layoutGUI];
     
     if (!enabled)
         [self animateCancelButton:enabled];
@@ -523,7 +527,7 @@
 
 #pragma mark - Button actions
 
-- (IBAction)clearButtonTapped:(id)sender
+- (IBAction)cancelButtonTapped:(id)sender
 {
     if (_searchTextField.text.length)
         [self resetSearchTextField:YES andHideKeyBoard:YES andDisableSearch:YES];
