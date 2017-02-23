@@ -78,7 +78,7 @@
 
 - (void)userLocationUpdated:(NSNotification *)notif
 {
-    if ([notif.userInfo allKeys])
+    if ([notif.userInfo allKeys] && !dataIsLoading)
     {
         if (![[NSUserDefaults standardUserDefaults] boolForKey:@"UserAlreadyAcceptedUsingLocation"])
         {
@@ -144,6 +144,7 @@
 {
     __weak typeof(self)weakSelf = self;
     __weak typeof(_forecastDS)wForecastDS = _forecastDS;
+    dataIsLoading = YES;
     [LoadingView showLoadingViewInView:self.view WithCompletionBlock:^{
         
         [wForecastDS getUserCityWithData:cityData andCompletionBlock:^(BOOL success, NSError *err, NSArray *itemsArray) {
