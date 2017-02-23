@@ -169,6 +169,8 @@
                 }];
             }
             
+            dataIsLoading = NO;
+            
         }];
     }];
 }

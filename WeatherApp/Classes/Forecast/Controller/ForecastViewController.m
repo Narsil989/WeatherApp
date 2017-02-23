@@ -385,7 +385,6 @@
         self.view.backgroundColor = _currentWeather.backgroudColor;
         [self addSearchIconToTextField];
         
-        
         _cancelIcon.image = [[UIImage imageNamed:@"CloseIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         _cancelIcon.tintColor =_currentWeather.backgroudColor ? _currentWeather.backgroudColor : [UIColor flatSkyBlueColor];
     }
